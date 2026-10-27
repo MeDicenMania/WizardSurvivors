@@ -35,5 +35,14 @@ public class MeleSpells : MonoBehaviour
             enemy.TakeDamage(currentDamage);
 
         }
+        else if (col.CompareTag("Prop"))
+        {
+
+            if (col.gameObject.TryGetComponent(out BreakableProps breakable))
+            {
+                breakable.TakeDamage(currentDamage);
+            }
+
+        }
     }
 }

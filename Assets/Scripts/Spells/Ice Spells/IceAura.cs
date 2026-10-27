@@ -1,6 +1,7 @@
 using NUnit.Framework;
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEditor;
 public class IceAura : MeleSpells
 {
     List <GameObject> markedEnemies;
@@ -17,6 +18,17 @@ public class IceAura : MeleSpells
             EnemyStats enemy = col.GetComponent<EnemyStats>();
             enemy.TakeDamage(currentDamage);
             markedEnemies.Add(col.gameObject);
+        }
+        else if (col.CompareTag("Prop"))
+        {
+
+            if (col.gameObject.TryGetComponent(out BreakableProps breakable))
+            {
+                breakable.TakeDamage(currentDamage);
+
+                markedEnemies.Add(col.gameObject);
+            }
+
         }
     }
 }

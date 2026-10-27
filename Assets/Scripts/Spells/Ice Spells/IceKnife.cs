@@ -16,6 +16,6 @@ public class IceKnife : ProjectileSpells
     void Update()
     {
        
-        transform.position += direction * spellData.Speed * Time.deltaTime;
+        transform.position += direction * currentSpeed * Time.deltaTime;
     }
 }

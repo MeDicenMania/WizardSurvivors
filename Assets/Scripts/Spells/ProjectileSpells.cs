@@ -33,7 +33,7 @@ public class ProjectileSpells : MonoBehaviour
 
         float dirx = direction.x;
         float diry = direction.y;
-        Debug.Log("DIRECCION RECIBIDA = " + dir); /// QUITAR DESPUES
+     
         Vector3 scale =transform.localScale;
 
         Vector3 rotation = transform.rotation.eulerAngles;
@@ -88,9 +88,18 @@ public class ProjectileSpells : MonoBehaviour
             EnemyStats enemy = col.GetComponent<EnemyStats>();
             enemy.TakeDamage(currentDamage);
             Pierce();
+        } 
+        else if (col.CompareTag("Prop"))
+        {
+
+            if(col.gameObject.TryGetComponent(out BreakableProps breakable))
+            {
+                breakable.TakeDamage(currentDamage);
+                Pierce();
+            }
+
         }
     }
-
     void Pierce()
     {
         currentPierce--;

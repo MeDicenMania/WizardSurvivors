@@ -4,9 +4,9 @@ public class EnemyStats : MonoBehaviour
 {
     public EnemyScriptableOjbects enemyData;
 
-    float currentMoveSpeed;
-    float currentHealth;
-    float currentDamage;
+    public float currentMoveSpeed;
+    public float currentHealth;
+    public float currentDamage;
 
     void Awake()
     {
@@ -30,4 +30,19 @@ public class EnemyStats : MonoBehaviour
     {
         Destroy(gameObject);
     }
+
+    private void OnCollisionStay2D(Collision2D col)
+    {
+
+        if (col.gameObject.CompareTag("Player"))
+        {
+            Debug.Log("Entró al IF del Player");
+            PlayerStats player = col.gameObject.GetComponent<PlayerStats>();
+            player.TakeDamage(currentDamage);
+            Debug.Log("PlayerStats es: " + player);
+
+        }
+    }
+
+
 }
