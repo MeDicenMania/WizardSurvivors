@@ -230,15 +230,15 @@ public class AVL<T> : BST<T> where T : IComparable<T>
         }
         else
         {
-            // Caso sin hijo izquierdo.
+
             if (current.Left == null)
                 return current.Right;
 
-            // Caso sin hijo derecho.
+
             if (current.Right == null)
                 return current.Left;
 
-            // Caso con dos hijos: sucesor mínimo derecho.
+           
             TreeNode<T> successor = current.Right;
 
             while (successor.Left != null)

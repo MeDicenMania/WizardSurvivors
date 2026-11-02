@@ -4,7 +4,7 @@ using UnityEngine;
 public class EnemyManager : MonoBehaviour
 {
     public static EnemyManager Instance { get; private set; }
-
+    EnemyPool pool;
     private AVL<int> enemies = new AVL<int>();
 
     private Dictionary<int, GameObject> enemyObjects =
@@ -25,6 +25,7 @@ public class EnemyManager : MonoBehaviour
             return;
         }
 
+        pool = FindAnyObjectByType<EnemyPool>();
         Instance = this;
     }
 
@@ -46,7 +47,7 @@ public class EnemyManager : MonoBehaviour
         enemyObjects.Add(id, enemy);
         enemyIds.Add(enemy, id);
 
-        Debug.Log("Enemigo registrado: " + id);
+        Debug.Log("Enemigo registrado: " + id +" | Cantidad de enemigos en escena: " + ActiveEnemyCount);
 
         return id;
     }
@@ -65,6 +66,7 @@ public class EnemyManager : MonoBehaviour
         // Eliminamos las referencias del administrador.
         enemyIds.Remove(enemy);
         enemyObjects.Remove(id);
+        pool.RecicleEnemy(enemy);
 
         Debug.Log("Enemigo eliminado: " + id);
     }

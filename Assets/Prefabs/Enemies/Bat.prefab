@@ -21,7 +21,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &6749510640705331448
 Transform:
   m_ObjectHideFlags: 0
@@ -176,7 +176,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d6855e973d87d14b8c2a6f846c1a7d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyMovement
-  enemyData: {fileID: 11400000, guid: 5039b1559f9812e4fa7f0489f01c5829, type: 2}
 --- !u!114 &-2434382599004860541
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -190,6 +189,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyStats
   enemyData: {fileID: 11400000, guid: 5039b1559f9812e4fa7f0489f01c5829, type: 2}
+  currentMoveSpeed: 0
+  currentHealth: 0
+  currentDamage: 0
 --- !u!114 &-8459354610253547046
 MonoBehaviour:
   m_ObjectHideFlags: 0

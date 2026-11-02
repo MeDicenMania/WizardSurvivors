@@ -3,7 +3,7 @@ using UnityEngine;
 public class EnemyStats : MonoBehaviour
 {
     public EnemyScriptableOjbects enemyData;
-
+    EnemyPool pool;
     public float currentMoveSpeed;
     public float currentHealth;
     public float currentDamage;
@@ -28,7 +28,7 @@ public class EnemyStats : MonoBehaviour
 
     void Kill()
     {
-        Destroy(gameObject);
+        gameObject.SetActive(false);
     }
 
     private void OnCollisionStay2D(Collision2D col)
@@ -36,10 +36,10 @@ public class EnemyStats : MonoBehaviour
 
         if (col.gameObject.CompareTag("Player"))
         {
-            Debug.Log("Entró al IF del Player");
+      
             PlayerStats player = col.gameObject.GetComponent<PlayerStats>();
             player.TakeDamage(currentDamage);
-            Debug.Log("PlayerStats es: " + player);
+            
 
         }
     }

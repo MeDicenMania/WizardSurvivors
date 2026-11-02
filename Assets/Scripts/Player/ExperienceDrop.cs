@@ -17,8 +17,14 @@ public class ExperienceDrop : MonoBehaviour
     public List<Drops> drops;
 
 
-     void OnDestroy()
+    void OnDisable()
     {
+        if (EnemyManager.Instance != null) 
+        {
+            EnemyManager.Instance.UnregisterEnemy(gameObject);
+        }
+        
+
         float randomNum = UnityEngine.Random.Range(0f, 100f);
         List<Drops> possibleDrops = new List<Drops>();
         foreach(Drops rate in drops)
@@ -37,4 +43,4 @@ public class ExperienceDrop : MonoBehaviour
         }
         
     }
-}
+}   

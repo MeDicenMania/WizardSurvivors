@@ -16,15 +16,7 @@ public class SpellSystem : MonoBehaviour
   protected virtual void Start()
     {
         pc = FindAnyObjectByType<PlayerController>();
-        
-        if (pc == null)
-        {
-            Debug.Log("NO ENCONTRE AL PLAYER");
-        }
-        else
-        {
-            Debug.Log("Player encontrado: " + pc.gameObject.name);
-        }
+     
 
         currentCooldown = spellData.Cooldown;
     }

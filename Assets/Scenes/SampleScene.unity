@@ -129,6 +129,7 @@ GameObject:
   m_Component:
   - component: {fileID: 374741574}
   - component: {fileID: 374741573}
+  - component: {fileID: 374741575}
   m_Layer: 0
   m_Name: SPAWNER
   m_TagString: Untagged
@@ -163,6 +164,20 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &374741575
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 374741572}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6f00bd53e1bbaf4496a34f6463d0b75, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyPool
+  enemies: {fileID: 7432616817929650736, guid: 36df00f7ca3e82f4ab5d227a749093a5, type: 3}
+  "tama\xF1o": 100
 --- !u!1001 &491652787
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1031,7 +1046,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemySpawner
   enemyPrefab: {fileID: 7432616817929650736, guid: 36df00f7ca3e82f4ab5d227a749093a5, type: 3}
   player: {fileID: 1282466795}
-  spawnInterval: 2
+  enemyPool: {fileID: 374741575}
+  spawnInterval: 0.1
   spawnDistance: 10
   maxEnemies: 100
 --- !u!4 &1864856136
