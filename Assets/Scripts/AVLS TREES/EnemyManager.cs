@@ -19,13 +19,14 @@ public class EnemyManager : MonoBehaviour
 
     private void Awake()
     {
+        pool = FindAnyObjectByType<EnemyPool>();
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
             return;
         }
 
-        pool = FindAnyObjectByType<EnemyPool>();
+      
         Instance = this;
     }
 
@@ -40,15 +41,14 @@ public class EnemyManager : MonoBehaviour
 
         int id = nextId++;
 
-        // El AVL organiza los identificadores.
-        enemies.Insert(id);
+      
 
         // Guardamos la relación entre ID y GameObject.
         enemyObjects.Add(id, enemy);
         enemyIds.Add(enemy, id);
 
-        Debug.Log("Enemigo registrado: " + id +" | Cantidad de enemigos en escena: " + ActiveEnemyCount);
 
+        enemies.Insert(id);
         return id;
     }
 
@@ -60,10 +60,10 @@ public class EnemyManager : MonoBehaviour
         if (!enemyIds.TryGetValue(enemy, out int id))
             return;
 
-        // Eliminamos el ID del árbol.
+    
         enemies.Remove(id);
 
-        // Eliminamos las referencias del administrador.
+      
         enemyIds.Remove(enemy);
         enemyObjects.Remove(id);
         pool.RecicleEnemy(enemy);

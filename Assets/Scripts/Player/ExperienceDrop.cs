@@ -17,11 +17,11 @@ public class ExperienceDrop : MonoBehaviour
     public List<Drops> drops;
 
 
-    void OnDisable()
+    void OnDestroy()
     {
-        if (EnemyManager.Instance != null) 
+        if (!gameObject.scene.isLoaded)
         {
-            EnemyManager.Instance.UnregisterEnemy(gameObject);
+            return;
         }
         
 

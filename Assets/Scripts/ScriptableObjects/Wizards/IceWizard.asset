@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22fb798dfa7a6a942ae00b75c29d7fa2, type: 3}
   m_Name: IceWizard
   m_EditorClassIdentifier: Assembly-CSharp::WizardsScriptableObject
-  startingSpell: {fileID: 0}
+  startingSpell: {fileID: 1936880328677392749, guid: dc684dc2f503c3d4ca1dbfd83298b71f, type: 3}
   maxHealth: 1000
   regen: 1
   moveSpeed: 3

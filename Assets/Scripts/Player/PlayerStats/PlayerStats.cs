@@ -2,15 +2,18 @@ using NUnit.Framework;
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 public class PlayerStats : MonoBehaviour
 {
-    public WizardsScriptableObject wizardData;
+     WizardsScriptableObject wizardData;
+    public List<GameObject> spawnedSpeells;
 
-    
+    public GameEvent onPlayerHealthChange;
+
     public float currentMaxHealth;
     [HideInInspector]
     public float currentDamage;
-    [HideInInspector]
+   
     public float currentMoveSpeed;
     [HideInInspector]
     public float currentRegen;
@@ -44,12 +47,18 @@ public class PlayerStats : MonoBehaviour
 
     void Awake()
     {
+
+        wizardData = CharacterSelector.GetData();
+        CharacterSelector.instance.DestroySingleton();
+
         currentMaxHealth = wizardData.MaxHealth;
         currentDamage = wizardData.Damage;
         currentMoveSpeed = wizardData.MoveSpeed;
         currentRegen = wizardData.Regen;
         currentProjectileSpeed = wizardData.ProjectileSpeed;
         currentMagnet = wizardData.Magnet;
+
+        SpawnSpell(wizardData.StartingSpell);
     }
 
      void Start()
@@ -103,6 +112,8 @@ public class PlayerStats : MonoBehaviour
         if (!isInvicible)
         {
             currentMaxHealth -= dmg;
+            onPlayerHealthChange.Raise(this, currentMaxHealth);
+
             invicibilityTimer = incibilityDuration;
             isInvicible = true;
 
@@ -115,7 +126,7 @@ public class PlayerStats : MonoBehaviour
 
     public void Kill()
     {
-        Destroy(gameObject);
+        
     }
   public void RestoreHealth(float amount)
     {
@@ -145,7 +156,12 @@ public class PlayerStats : MonoBehaviour
         }
     }
 
-
+    public void SpawnSpell(GameObject spell)
+    {
+        GameObject spawnSpell = Instantiate(spell, transform.position, Quaternion.identity);
+        spawnSpell.transform.SetParent(transform);
+        spawnedSpeells.Add(spawnSpell);
+    }
 
 
 }
