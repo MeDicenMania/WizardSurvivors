@@ -444,10 +444,12 @@ MonoBehaviour:
       enemyCount: 5
       spawnCount: 0
       enemyPrefab: {fileID: 7432616817929650736, guid: 36df00f7ca3e82f4ab5d227a749093a5, type: 3}
+      priority: 0
     - enemyName: redbat
       enemyCount: 5
       spawnCount: 0
       enemyPrefab: {fileID: 7432616817929650736, guid: a36ae35befeef8c46b763f24202a09c4, type: 3}
+      priority: 0
     waveQuota: 0
     spawnInterval: 1
     spawnCount: 0
@@ -457,17 +459,19 @@ MonoBehaviour:
       enemyCount: 1
       spawnCount: 0
       enemyPrefab: {fileID: 7432616817929650736, guid: a36ae35befeef8c46b763f24202a09c4, type: 3}
+      priority: 0
     - enemyName: redbat
       enemyCount: 1
       spawnCount: 0
       enemyPrefab: {fileID: 7432616817929650736, guid: 36df00f7ca3e82f4ab5d227a749093a5, type: 3}
+      priority: 0
     waveQuota: 0
     spawnInterval: 1
     spawnCount: 0
   currentWaveCount: 0
   waveInterval: 10
   enemiesAlive: 0
-  maxEnemiesAllowed: 4
+  maxEnemiesAllowed: 15
   maxEnemiesReached: 0
   relativeSpawnPoints:
   - {fileID: 1861331921}

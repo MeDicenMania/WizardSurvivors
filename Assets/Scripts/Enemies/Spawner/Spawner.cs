@@ -6,6 +6,11 @@ using UnityEngine;
 
 public class Spawner : MonoBehaviour
 {
+
+
+    SimpleLinkedPriorityQueue<EnemyGroup> enemyQueue;
+    bool isDifficultWave;
+
     [System.Serializable]
     public class Wave
     {
@@ -18,10 +23,16 @@ public class Spawner : MonoBehaviour
     }
     private void Start()
     {
-        CalculateWaveQuota();
         player = FindAnyObjectByType<PlayerStats>().transform;
-      
-       
+        enemyQueue = new SimpleLinkedPriorityQueue<EnemyGroup>();
+
+        CalculateWaveQuota();
+        CheckDifficultWave();
+
+
+        Debug.Log("Elementos en cola al iniciar: " + enemyQueue.Count);
+
+
     }
     [System.Serializable]
     public class EnemyGroup
@@ -30,6 +41,9 @@ public class Spawner : MonoBehaviour
         public int enemyCount; //numero de enemigos a spawnear
         public int spawnCount;  //enemigos ya spawneados spawneados
         public GameObject enemyPrefab;
+
+
+        public int priority; //PRIORIDAD A LA HORA DE SPAWNEAR
     }
 
     public List<Wave> waves;     //lista de todas las oleadas
@@ -47,6 +61,11 @@ public class Spawner : MonoBehaviour
     public List<Transform> relativeSpawnPoints;
 
     Transform player;
+
+
+
+
+
      void Update()
     {
 
@@ -62,10 +81,60 @@ public class Spawner : MonoBehaviour
             SpawnEnemies();
         }
     }
+    void CheckDifficultWave()
+    {
+        isDifficultWave = Random.Range(1,1) == 1;
+
+        if (isDifficultWave)
+        {
+                                                   //  Debug.Log("oleada rapida ns");
+
+            CalculateEnemyPriorities();
+            FillEnemyQueue();
+        }
+        else
+        {
+                                                   //Debug.Log("Oleada normal");
+        }
+    }
+
+
+    void CalculateEnemyPriorities()
+    {
+        foreach (var enemyGroup in waves[currentWaveCount].enemyGroups)
+        {
+            EnemyStats enemyStats = enemyGroup.enemyPrefab.GetComponent<EnemyStats>();
+
+            float speed = enemyStats.enemyData.MoveSpeed;
+
+                                                                                       //busca el mas rapido
+            enemyGroup.priority = Mathf.RoundToInt(100 - speed);
+
+           
+        }
+    }
+
+    void FillEnemyQueue()
+    {
+        enemyQueue.Clear();
+
+        foreach (var enemyGroup in waves[currentWaveCount].enemyGroups)
+        {
+            if (enemyGroup.spawnCount < enemyGroup.enemyCount)
+            {
+                Debug.Log("Agregando a cola: " + enemyGroup.enemyName);
+                enemyQueue.Enqueue(enemyGroup, enemyGroup.priority);
+            }
+        }
+        Debug.Log("Elementos en cola: " + enemyQueue.Count);
+    }
+
+
+
 
     IEnumerator BeginNextWave()
     {
-        //
+        
         yield return new WaitForSeconds(waveInterval);
 
         // si hay mas oleadas se mueve a la siguente digamos
@@ -73,6 +142,8 @@ public class Spawner : MonoBehaviour
         {
             currentWaveCount++;
             CalculateWaveQuota();
+            CheckDifficultWave();
+
         }
     }
 
@@ -94,43 +165,64 @@ public class Spawner : MonoBehaviour
 
     void SpawnEnemies()
     {
-        if (waves[currentWaveCount].spawnCount < waves[currentWaveCount].waveQuota && !maxEnemiesReached)
+        if (waves[currentWaveCount].spawnCount >= waves[currentWaveCount].waveQuota)
+            return;
+
+        if (enemiesAlive >= maxEnemiesAllowed)
         {
-            //spawnea cada enemigo hasta que se llene la quota  
-            foreach(var enemyGroup in waves[currentWaveCount].enemyGroups)
+            maxEnemiesReached = true;
+            return;
+        }
+
+        EnemyGroup enemyGroup = null;
+
+        if (isDifficultWave)
+        {
+            if (enemyQueue.IsEmpty)
+                return;
+
+            enemyGroup = enemyQueue.Dequeue();
+        }
+        else
+        {
+                                                                               // Si es Oleada normal sigue  el orden de la lista comun 
+            foreach (var group in waves[currentWaveCount].enemyGroups)
             {
-                //chequea si el minimo de enemigos de un tipo ya fue spawneado
-                if( enemyGroup.spawnCount < enemyGroup.enemyCount)
+                if (group.spawnCount < group.enemyCount)
                 {
-                   if(enemiesAlive >= maxEnemiesAllowed)
-                    {
-                        maxEnemiesReached = true;
-                        return;
-                    }
-
-
-                    Instantiate(enemyGroup.enemyPrefab, player.position + relativeSpawnPoints[Random.Range(0, relativeSpawnPoints.Count)].position, Quaternion.identity);
-
-                    Vector2 spawnPositions = new Vector2(player.transform.position.x + Random.Range(-10f,10f),player.transform.position.y + Random.Range(-10f,10f));
-                   
-
-                    enemyGroup.spawnCount++;
-                    waves[currentWaveCount].spawnCount++;
-                    enemiesAlive++;
+                    enemyGroup = group;
+                    break;
                 }
             }
         }
 
-        if( enemiesAlive < maxEnemiesAllowed)
-        {
-            maxEnemiesReached = false; 
-        }
-    }
+        if (enemyGroup == null)
+            return;
 
+        Instantiate(
+            enemyGroup.enemyPrefab,
+            player.position + relativeSpawnPoints[Random.Range(0, relativeSpawnPoints.Count)].position,
+            Quaternion.identity
+        );
+
+        enemyGroup.spawnCount++;
+        waves[currentWaveCount].spawnCount++;
+        enemiesAlive++;
+
+        if (isDifficultWave && enemyGroup.spawnCount < enemyGroup.enemyCount)
+        {
+            enemyQueue.Enqueue(enemyGroup, enemyGroup.priority);
+        }
+
+        maxEnemiesReached = enemiesAlive >= maxEnemiesAllowed;
+    }
 
     public void OnEnemyKill()
     {
         enemiesAlive--;
     }
 
+
+
 }
+
