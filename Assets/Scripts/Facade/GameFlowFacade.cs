@@ -43,7 +43,8 @@ public class GameFlowFacade : MonoBehaviour
 
     private void Update()
     {
-        if (!isGameOver && Input.GetKeyDown(KeyCode.Escape))
+        // Si GameManager ya maneja Escape, evitamos doble toggle
+        if (GameManager.instance == null && !isGameOver && Input.GetKeyDown(KeyCode.Escape))
         {
             TogglePause();
         }
@@ -56,6 +57,14 @@ public class GameFlowFacade : MonoBehaviour
     {
         if (isGameOver) return;
         isGameOver = true;
+
+        // 0. Subsistema GameManager (si existe en la escena)
+        if (GameManager.instance != null && !GameManager.instance.isGameOver)
+        {
+            if (playerStats != null)
+                GameManager.instance.AssingLevelReachedUI(playerStats.level);
+            GameManager.instance.GameOver();
+        }
 
         // 1. Subsistema del Jugador: frenar movimiento y apagar hechizos
         if (playerController != null)
