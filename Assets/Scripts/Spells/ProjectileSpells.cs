@@ -26,6 +26,11 @@ public class ProjectileSpells : MonoBehaviour
         Destroy(gameObject, destroyDelay);
     }
 
+    
+    public float getCurrentDamage()
+    {
+        return currentDamage *= FindAnyObjectByType<PlayerStats>().currentDamage;
+    }
     // Update is called once per frame
     public void DirectionCheck(Vector3 dir)
     {
@@ -86,7 +91,7 @@ public class ProjectileSpells : MonoBehaviour
         if(col.CompareTag("Enemy"))
         {
             EnemyStats enemy = col.GetComponent<EnemyStats>();
-            enemy.TakeDamage(currentDamage);
+            enemy.TakeDamage(getCurrentDamage());
             Pierce();
         } 
         else if (col.CompareTag("Prop"))
@@ -94,7 +99,7 @@ public class ProjectileSpells : MonoBehaviour
 
             if(col.gameObject.TryGetComponent(out BreakableProps breakable))
             {
-                breakable.TakeDamage(currentDamage);
+                breakable.TakeDamage(getCurrentDamage());
                 Pierce();
             }
 

@@ -17,3 +17,6 @@ MonoBehaviour:
   speed: 5
   cooldown: 1
   pierce: 1
+  level: 1
+  nextLevelPrefab: {fileID: 1936880328677392749, guid: 753aa399392f56f4ea69a7740c96cb35, type: 3}
+  icon: {fileID: -8321102221490951993, guid: d2bff02ee69f7374bb31568610a7d587, type: 3}

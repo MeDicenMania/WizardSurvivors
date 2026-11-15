@@ -12,7 +12,10 @@ public class MeleSpells : MonoBehaviour
     protected float currentSpeed;
     protected float currentCooldown;
 
-
+    public float getCurrentDamage()
+    {
+        return currentDamage *= FindAnyObjectByType<PlayerStats>().currentDamage;
+    }
     private void Awake()
     {
         currentCooldown = SpellData.Cooldown;
@@ -32,7 +35,7 @@ public class MeleSpells : MonoBehaviour
         if (col.CompareTag("Enemy"))
         {
             EnemyStats enemy = col.GetComponent<EnemyStats>();
-            enemy.TakeDamage(currentDamage);
+            enemy.TakeDamage(getCurrentDamage());
 
         }
         else if (col.CompareTag("Prop"))

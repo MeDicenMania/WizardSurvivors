@@ -6,12 +6,12 @@ using TMPro;
 public class PlayerStats : MonoBehaviour
 {
      WizardsScriptableObject wizardData;
-    public List<GameObject> spawnedSpeells;
+    //public List<GameObject> spawnedSpeells;
 
     public GameEvent onPlayerHealthChange;
 
     public float currentMaxHealth;
-    [HideInInspector]
+
     public float currentDamage;
    
     public float currentMoveSpeed;
@@ -21,6 +21,17 @@ public class PlayerStats : MonoBehaviour
     public float currentProjectileSpeed;
     [HideInInspector]
     public float currentMagnet;
+
+
+    [Header("Inventario")]
+    InventoryManager inventory;
+    public int SpellIndex;
+    public int ItemIndex;
+    
+    
+    //public GameObject secondweapontest;
+
+
 
     [Header("Experience")]
     public int experience = 0;
@@ -45,11 +56,17 @@ public class PlayerStats : MonoBehaviour
     float invicibilityTimer;
     bool isInvicible;
 
+
+    public GameObject item1;
+    public GameObject item2;
     void Awake()
     {
-
+        
         wizardData = CharacterSelector.GetData();
         CharacterSelector.instance.DestroySingleton();
+
+
+        inventory = GetComponent<InventoryManager>();
 
         currentMaxHealth = wizardData.MaxHealth;
         currentDamage = wizardData.Damage;
@@ -59,6 +76,8 @@ public class PlayerStats : MonoBehaviour
         currentMagnet = wizardData.Magnet;
 
         SpawnSpell(wizardData.StartingSpell);
+        SpawnItem(item1);
+        SpawnItem(item2);
     }
 
      void Start()
@@ -158,10 +177,39 @@ public class PlayerStats : MonoBehaviour
 
     public void SpawnSpell(GameObject spell)
     {
+        if(SpellIndex >= inventory.spellSlots.Count -1)
+        {
+            Debug.LogError("spelllimitreached");
+            return;
+
+        }
+
+
         GameObject spawnSpell = Instantiate(spell, transform.position, Quaternion.identity);
-        spawnSpell.transform.SetParent(transform);
-        spawnedSpeells.Add(spawnSpell);
+         spawnSpell.transform.SetParent(transform);
+         inventory.AddSpell(SpellIndex, spawnSpell.GetComponent<SpellController>());
+
+         SpellIndex++;
+         }
+    public void SpawnItem(GameObject passiveItem)
+    {
+        if (ItemIndex >= inventory.passiveItemSlots.Count - 1)
+        {
+            Debug.LogError("spelllimitreached");
+            return;
+
+        }
+
+
+        GameObject SpawnedPassiveItem = Instantiate(passiveItem, transform.position, Quaternion.identity);
+        SpawnedPassiveItem.transform.SetParent(transform);
+        inventory.AddPassiveItem(ItemIndex, SpawnedPassiveItem.GetComponent<PassiveItem>());
+
+        ItemIndex++;
     }
+
+
+
 
 
 }
