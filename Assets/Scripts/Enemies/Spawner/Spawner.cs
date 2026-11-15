@@ -6,7 +6,8 @@ using UnityEngine;
 
 public class Spawner : MonoBehaviour
 {
-
+    [Header("Factory")]
+    [SerializeField] private EnemyFactory enemyFactory;
 
     SimpleLinkedPriorityQueue<EnemyGroup> enemyQueue;
     bool isDifficultWave;
@@ -23,6 +24,12 @@ public class Spawner : MonoBehaviour
     }
     private void Start()
     {
+        if (enemyFactory == null)
+        {
+            enemyFactory = GetComponent<EnemyFactory>();
+            if (enemyFactory == null)
+                enemyFactory = FindAnyObjectByType<EnemyFactory>();
+        }
         player = FindAnyObjectByType<PlayerStats>().transform;
         enemyQueue = new SimpleLinkedPriorityQueue<EnemyGroup>();
 
@@ -199,11 +206,24 @@ public class Spawner : MonoBehaviour
         if (enemyGroup == null)
             return;
 
-        Instantiate(
-            enemyGroup.enemyPrefab,
-            player.position + relativeSpawnPoints[Random.Range(0, relativeSpawnPoints.Count)].position,
-            Quaternion.identity
-        );
+        Vector3 spawnPos = player.position + relativeSpawnPoints[Random.Range(0, relativeSpawnPoints.Count)].position;
+
+        if (enemyFactory != null)
+        {
+            IEnemy createdEnemy = enemyFactory.Create(enemyGroup.enemyName, spawnPos);
+            if (createdEnemy == null && enemyGroup.enemyPrefab != null)
+            {
+                Instantiate(enemyGroup.enemyPrefab, spawnPos, Quaternion.identity);
+            }
+        }
+        else
+        {
+            Instantiate(
+                enemyGroup.enemyPrefab,
+                spawnPos,
+                Quaternion.identity
+            );
+        }
 
         enemyGroup.spawnCount++;
         waves[currentWaveCount].spawnCount++;

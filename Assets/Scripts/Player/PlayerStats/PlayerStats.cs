@@ -5,8 +5,11 @@ using System.Collections.Generic;
 using TMPro;
 public class PlayerStats : MonoBehaviour
 {
-     WizardsScriptableObject wizardData;
+    WizardsScriptableObject wizardData;
     public List<GameObject> spawnedSpeells;
+
+    [Header("Facade")]
+    [SerializeField] private GameFlowFacade gameFlowFacade;
 
     public GameEvent onPlayerHealthChange;
 
@@ -47,6 +50,10 @@ public class PlayerStats : MonoBehaviour
 
     void Awake()
     {
+        if (gameFlowFacade == null)
+        {
+            gameFlowFacade = FindAnyObjectByType<GameFlowFacade>();
+        }
 
         wizardData = CharacterSelector.GetData();
         CharacterSelector.instance.DestroySingleton();
@@ -81,6 +88,7 @@ public class PlayerStats : MonoBehaviour
     public void IncreaseExperience(int amount)
     {
         experience += amount;
+        LevelUpCheker();
     }
 
     void LevelUpCheker()
@@ -94,7 +102,7 @@ public class PlayerStats : MonoBehaviour
 
             foreach(LevelRange range in levelRanges)
             {
-                if(level >= range.startLevel && level >= range.endLevel)
+                if(level >= range.startLevel && level <= range.endLevel)
                 {
                     experienceCapIncrease = range.experienceCapIncrease;
                         break;
@@ -103,6 +111,10 @@ public class PlayerStats : MonoBehaviour
 
             experienceCap += experienceCapIncrease;
 
+            if (gameFlowFacade != null)
+            {
+                gameFlowFacade.NotifyLevelUp(level);
+            }
         }
     }
 
@@ -126,7 +138,14 @@ public class PlayerStats : MonoBehaviour
 
     public void Kill()
     {
-        
+        if (gameFlowFacade != null)
+        {
+            gameFlowFacade.TriggerGameOver();
+        }
+        else
+        {
+            Debug.Log("Player Murió (GameFlowFacade no encontrado en la escena).");
+        }
     }
   public void RestoreHealth(float amount)
     {
@@ -163,5 +182,37 @@ public class PlayerStats : MonoBehaviour
         spawnedSpeells.Add(spawnSpell);
     }
 
+    // ==========================================
+    // PATRÓN MEMENTO (Originador / Originator)
+    // ==========================================
+
+    // Crea un memento con el estado actual del jugador
+    public PlayerMemento SaveState()
+    {
+        return new PlayerMemento(
+            transform.position,
+            currentMaxHealth,
+            experience,
+            level,
+            experienceCap
+        );
+    }
+
+    // Restaura el estado del jugador desde un memento
+    public void RestoreState(PlayerMemento memento)
+    {
+        if (memento == null) return;
+
+        transform.position = memento.Position;
+        this.currentMaxHealth = memento.Health;
+        this.experience = memento.Experience;
+        this.level = memento.Level;
+        this.experienceCap = memento.ExperienceCap;
+
+        if (onPlayerHealthChange != null)
+        {
+            onPlayerHealthChange.Raise(this, currentMaxHealth);
+        }
+    }
 
 }
