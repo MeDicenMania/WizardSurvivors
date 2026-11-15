@@ -14,7 +14,7 @@ public class MeleSpells : MonoBehaviour
 
     public float getCurrentDamage()
     {
-        return currentDamage *= FindAnyObjectByType<PlayerStats>().currentDamage;
+        return currentDamage *= FindAnyObjectByType<PlayerStats>().CurrentDamage;
     }
     private void Awake()
     {

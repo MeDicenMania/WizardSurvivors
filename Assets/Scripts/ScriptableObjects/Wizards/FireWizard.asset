@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22fb798dfa7a6a942ae00b75c29d7fa2, type: 3}
   m_Name: FireWizard
   m_EditorClassIdentifier: Assembly-CSharp::WizardsScriptableObject
+  icon: {fileID: 7173244315590077772, guid: 5337968d1df4d64478b13c8bf00af054, type: 3}
+  name: Fire Wizard
   startingSpell: {fileID: 7397856654757198459, guid: a0992a38019643040b60b2717ce7baea, type: 3}
   maxHealth: 1000
   regen: 1

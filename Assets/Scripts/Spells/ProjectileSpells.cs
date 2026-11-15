@@ -29,7 +29,7 @@ public class ProjectileSpells : MonoBehaviour
     
     public float getCurrentDamage()
     {
-        return currentDamage *= FindAnyObjectByType<PlayerStats>().currentDamage;
+        return currentDamage *= FindAnyObjectByType<PlayerStats>().CurrentDamage;
     }
     // Update is called once per frame
     public void DirectionCheck(Vector3 dir)

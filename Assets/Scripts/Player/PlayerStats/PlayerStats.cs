@@ -10,18 +10,104 @@ public class PlayerStats : MonoBehaviour
 
     public GameEvent onPlayerHealthChange;
 
-    public float currentMaxHealth;
+    float currentMaxHealth;
 
-    public float currentDamage;
+    float currentDamage;
    
-    public float currentMoveSpeed;
-    [HideInInspector]
-    public float currentRegen;
-    [HideInInspector]
-    public float currentProjectileSpeed;
-    [HideInInspector]
-    public float currentMagnet;
+    float currentMoveSpeed;
+   
+    float currentRegen;
+    
+    float currentProjectileSpeed;
+  
+    float currentMagnet;
 
+
+
+
+
+    public float CurrentDamage
+    {
+        get { return currentDamage; }
+        set
+        {
+            if( currentDamage != value)
+            {
+                currentDamage = value;
+
+                Debug.Log("CAMBIO EL DAÑO");
+
+                if(GameManager.instance != null)
+                {
+                    GameManager.instance.currentDamageUI.text = "Damage: " + currentDamage;
+                }
+
+            }
+        }
+    }
+    public float CurrentMoveSpeed
+    {
+        get { return currentMoveSpeed; }
+        set
+        {
+            if (currentMoveSpeed != value)
+            {
+                currentMoveSpeed = value;
+
+                if (GameManager.instance != null)
+                {
+                    GameManager.instance.currentMoveSpeedUI.text = "MoveSpeed: " + currentMoveSpeed;
+                }
+
+
+            }
+        }
+    }
+    public float CurrentRegen
+    {
+        get { return currentRegen; }
+        set
+        {
+            if (currentRegen != value)
+            {
+                currentRegen = value;
+                if (GameManager.instance != null)
+                {
+                    GameManager.instance.currentRegenUI.text = "Life Regen: " + currentRegen;
+                }
+            }
+        }
+    }
+    public float CurrentProjectileSpeed
+    {
+        get { return currentProjectileSpeed; }
+        set
+        {
+            if (currentProjectileSpeed != value)
+            {
+                currentProjectileSpeed = value;
+                if (GameManager.instance != null)
+                {
+                    GameManager.instance.currentProjectileSpeedUI.text = "Projectile Speed: " + currentProjectileSpeed;
+                }
+            }
+        }
+    }
+    public float CurrentMagnet
+    {
+        get { return currentMagnet; }
+        set
+        {
+            if (currentMagnet != value)
+            {
+                currentMagnet = value;
+                if (GameManager.instance != null)
+                {
+                    GameManager.instance.currentMagnetUI.text = "Magnet: " + currentMagnet;
+                }
+            }
+        }
+    }
 
     [Header("Inventario")]
     InventoryManager inventory;
@@ -30,8 +116,6 @@ public class PlayerStats : MonoBehaviour
     
     
     //public GameObject secondweapontest;
-
-
 
     [Header("Experience")]
     public int experience = 0;
@@ -69,11 +153,11 @@ public class PlayerStats : MonoBehaviour
         inventory = GetComponent<InventoryManager>();
 
         currentMaxHealth = wizardData.MaxHealth;
-        currentDamage = wizardData.Damage;
-        currentMoveSpeed = wizardData.MoveSpeed;
-        currentRegen = wizardData.Regen;
-        currentProjectileSpeed = wizardData.ProjectileSpeed;
-        currentMagnet = wizardData.Magnet;
+        CurrentDamage = wizardData.Damage;
+        CurrentMoveSpeed = wizardData.MoveSpeed;
+        CurrentRegen = wizardData.Regen;
+        CurrentProjectileSpeed = wizardData.ProjectileSpeed;
+        CurrentMagnet = wizardData.Magnet;
 
         SpawnSpell(wizardData.StartingSpell);
         SpawnItem(item1);
@@ -82,7 +166,16 @@ public class PlayerStats : MonoBehaviour
 
      void Start()
     {
+
         experienceCap = levelRanges[0].experienceCapIncrease;
+
+        GameManager.instance.currentDamageUI.text = "Damage: " + currentDamage;
+        GameManager.instance.currentMoveSpeedUI.text = "MoveSpeed: " + currentMoveSpeed;
+        GameManager.instance.currentRegenUI.text = "Life Regen: " + currentRegen;
+        GameManager.instance.currentProjectileSpeedUI.text = "Projectile Speed: " + currentProjectileSpeed;
+        GameManager.instance.currentMagnetUI.text = "Magnet: " + currentMagnet;
+
+        GameManager.instance.AssingWizardUI(wizardData);
     }
     
      void Update()
@@ -100,6 +193,7 @@ public class PlayerStats : MonoBehaviour
     public void IncreaseExperience(int amount)
     {
         experience += amount;
+        LevelUpCheker();
     }
 
     void LevelUpCheker()
@@ -145,7 +239,11 @@ public class PlayerStats : MonoBehaviour
 
     public void Kill()
     {
-        
+        if (!GameManager.instance.isGameOver)
+        {
+            GameManager.instance.AssingLevelReachedUI(level);
+            GameManager.instance.GameOver();
+        }
     }
   public void RestoreHealth(float amount)
     {
@@ -165,7 +263,7 @@ public class PlayerStats : MonoBehaviour
     {
         if( currentMaxHealth < wizardData.MaxHealth)
         {
-            currentMaxHealth += currentRegen * Time.deltaTime;
+            currentMaxHealth += CurrentRegen * Time.deltaTime;
 
 
             if(currentMaxHealth > wizardData.MaxHealth)
@@ -199,17 +297,10 @@ public class PlayerStats : MonoBehaviour
             return;
 
         }
-
-
         GameObject SpawnedPassiveItem = Instantiate(passiveItem, transform.position, Quaternion.identity);
         SpawnedPassiveItem.transform.SetParent(transform);
         inventory.AddPassiveItem(ItemIndex, SpawnedPassiveItem.GetComponent<PassiveItem>());
 
         ItemIndex++;
     }
-
-
-
-
-
 }

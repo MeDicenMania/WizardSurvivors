@@ -40,6 +40,10 @@ public class PlayerController : MonoBehaviour
         float moveY = Input.GetAxisRaw("Vertical");
 
         moveDir = new Vector2(moveX, moveY).normalized;
+        if(GameManager.instance.isGameOver == true)
+        {
+            return;
+        }
 
         if(moveDir.x != 0)
         {
@@ -60,6 +64,6 @@ public class PlayerController : MonoBehaviour
     }
     void Move()
     {
-        rb.linearVelocity = new Vector2(moveDir.x * player.currentMoveSpeed , moveDir.y * player.currentMoveSpeed );
+        rb.linearVelocity = new Vector2(moveDir.x * player.CurrentMoveSpeed , moveDir.y * player.CurrentMoveSpeed );
     }
 }
