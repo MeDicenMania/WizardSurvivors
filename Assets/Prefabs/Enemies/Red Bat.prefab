@@ -188,6 +188,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b10dbbe32d7b8340b244a4053430574, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyStats
+  id: redbat
   enemyData: {fileID: 11400000, guid: 88b3b0d275c7ffa4595787a937adf340, type: 2}
   currentMoveSpeed: 0
   currentHealth: 0

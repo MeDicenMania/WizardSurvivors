@@ -4,8 +4,18 @@ using UnityEngine;
 public class WizardsScriptableObject : ScriptableObject
 {
     [SerializeField]
-    GameObject startingSpell;
+    Sprite  icon;
+    public Sprite Icon { get => icon; private set => icon = value; }
 
+    [SerializeField]
+    string name;
+    public string Name { get => name; private set => name = value; }
+
+
+
+
+    [SerializeField]
+    GameObject startingSpell;
     public GameObject StartingSpell { get => startingSpell; private set => startingSpell = value; }
 
     [SerializeField]

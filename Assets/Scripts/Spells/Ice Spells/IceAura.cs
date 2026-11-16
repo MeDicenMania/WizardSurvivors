@@ -16,7 +16,7 @@ public class IceAura : MeleSpells
         if(col.CompareTag("Enemy") && !markedEnemies.Contains(col.gameObject))
         { 
             EnemyStats enemy = col.GetComponent<EnemyStats>();
-            enemy.TakeDamage(currentDamage);
+            enemy.TakeDamage(getCurrentDamage());
             markedEnemies.Add(col.gameObject);
         }
         else if (col.CompareTag("Prop"))
@@ -24,7 +24,7 @@ public class IceAura : MeleSpells
 
             if (col.gameObject.TryGetComponent(out BreakableProps breakable))
             {
-                breakable.TakeDamage(currentDamage);
+                breakable.TakeDamage(getCurrentDamage());
 
                 markedEnemies.Add(col.gameObject);
             }
