@@ -154,7 +154,7 @@ public class PlayerStats : MonoBehaviour
 
         SpawnSpell(wizardData.StartingSpell);
         SpawnItem(item1);
-        SpawnItem(item2);
+       // SpawnItem(item2);
     }
 
     void Start()
@@ -211,6 +211,8 @@ public class PlayerStats : MonoBehaviour
             }
 
             experienceCap += experienceCapIncrease;
+
+            GameManager.instance.StartLevelUp();
 
             if (gameFlowFacade != null)
             {

@@ -16,3 +16,5 @@ MonoBehaviour:
   level: 2
   nextLevelPrefab: {fileID: 4277522862480780216, guid: 84a2c95c7c3b4214d943856f777503b5, type: 3}
   icon: {fileID: -1160325093310371271, guid: 5337968d1df4d64478b13c8bf00af054, type: 3}
+  name: Book Level 2
+  description: Increase damage by 5

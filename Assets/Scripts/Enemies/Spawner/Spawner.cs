@@ -112,7 +112,7 @@ public class Spawner : MonoBehaviour
     }
     void CheckDifficultWave()
     {
-        isDifficultWave = Random.Range(1,1) == 1;
+        isDifficultWave = Random.Range(1,20) == 1;
 
         if (isDifficultWave)
         {

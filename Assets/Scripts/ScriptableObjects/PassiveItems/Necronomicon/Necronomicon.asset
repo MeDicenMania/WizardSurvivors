@@ -16,3 +16,5 @@ MonoBehaviour:
   level: 1
   nextLevelPrefab: {fileID: 4277522862480780216, guid: 84a2c95c7c3b4214d943856f777503b5, type: 3}
   icon: {fileID: 7191115477078338312, guid: 82e9baf75d932bc488b3c52688b04dc7, type: 3}
+  name: Book
+  description: Deal more damage
