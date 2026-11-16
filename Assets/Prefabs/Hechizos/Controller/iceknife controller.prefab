@@ -41,8 +41,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 1936880328677392749}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 302e0b8e50fccef48ba8244009c22e74, type: 3}
+  m_Script: {fileID: 11500000, guid: ebd895750e4e4e68a281c0cae1f54731, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::IceController
+  m_EditorClassIdentifier: Assembly-CSharp::NearestEnemySpellController
   spellData: {fileID: 11400000, guid: c18379ca76917cf419a1513e21be7db7, type: 2}
   currentCooldown: 0
