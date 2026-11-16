@@ -1,6 +1,4 @@
-using NUnit.Framework;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class MapController : MonoBehaviour
@@ -19,6 +17,7 @@ public class MapController : MonoBehaviour
     GameObject LastChunk;
     public float MaxDist;
     float chunkDistance;
+    private int previousChunkIndex = -1;
    public float timer;
    public float deleteChunkTime;
     void Start()
@@ -110,8 +109,28 @@ public class MapController : MonoBehaviour
 
     void SpawnChunk()
     {
-        int rand = Random.Range(0,terrainChunks.Count);
-        LastChunk =      currentChunk = Instantiate(terrainChunks[rand], noTerrainPosition, Quaternion.identity);
+        if (terrainChunks == null || terrainChunks.Count == 0)
+        {
+            Debug.LogWarning("No hay chunks configurados para generar.", this);
+            return;
+        }
+
+        SimpleArraySet<int> candidates = new SimpleArraySet<int>(terrainChunks.Count);
+        for (int i = 0; i < terrainChunks.Count; i++)
+        {
+            if (i != previousChunkIndex)
+                candidates.Add(i);
+        }
+
+        // Con un solo chunk configurado no existe una alternativa posible.
+        if (candidates.IsEmpty)
+            candidates.Add(previousChunkIndex);
+
+        int[] candidateIndices = candidates.ToArray();
+        int selectedIndex = candidateIndices[Random.Range(0, candidateIndices.Length)];
+        previousChunkIndex = selectedIndex;
+
+        LastChunk = currentChunk = Instantiate(terrainChunks[selectedIndex], noTerrainPosition, Quaternion.identity);
         spawnedChunks.Add(LastChunk);
     }
 
