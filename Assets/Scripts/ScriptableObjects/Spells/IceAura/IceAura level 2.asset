@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 147dc29a8783afe4089a579b39dd12fd, type: 3}
   m_Name: IceAura level 2
   m_EditorClassIdentifier: Assembly-CSharp::SpellsScriptableObjects
-  prefab: {fileID: 7620905232270212023, guid: aa56e635def3ef9489f26a97740e3fde, type: 3}
-  damage: 1.5
+  prefab: {fileID: 7620905232270212023, guid: dc5d946a74483cf43b7e03e0e97c6f4a, type: 3}
+  damage: 3
   speed: 0
   cooldown: 2
   pierce: 15

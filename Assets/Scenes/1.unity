@@ -1064,9 +1064,9 @@ RectTransform:
   - {fileID: 1381027393}
   m_Father: {fileID: 594071455}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 334.34744, y: -462.34158}
   m_SizeDelta: {x: 672.4955, y: 102.3409}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &223572816
@@ -4535,7 +4535,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &844050818
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4925,9 +4925,9 @@ RectTransform:
   - {fileID: 1605102699}
   m_Father: {fileID: 594071455}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 334.34744, y: -51.17045}
   m_SizeDelta: {x: 672.4955, y: 102.3409}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &921994823
@@ -6932,14 +6932,18 @@ MonoBehaviour:
   spellLevels: 000000000000000000000000000000000000000000000000
   passiveItemsLevels: 000000000000000000000000000000000000000000000000
   spellUpgradeOptions:
-  - initialWeapon: {fileID: 1936880328677392749, guid: dc684dc2f503c3d4ca1dbfd83298b71f, type: 3}
+  - spellUpgradeIndex: 0
+    initialWeapon: {fileID: 1936880328677392749, guid: dc684dc2f503c3d4ca1dbfd83298b71f, type: 3}
     spellsData: {fileID: 11400000, guid: c18379ca76917cf419a1513e21be7db7, type: 2}
-  - initialWeapon: {fileID: 7397856654757198459, guid: a0992a38019643040b60b2717ce7baea, type: 3}
+  - spellUpgradeIndex: 1
+    initialWeapon: {fileID: 7397856654757198459, guid: a0992a38019643040b60b2717ce7baea, type: 3}
     spellsData: {fileID: 11400000, guid: d91192ca4bdb9f943abcbd47bbfca112, type: 2}
   passiveItemsUpgradeOptions:
-  - initialItem: {fileID: 8162143158953995465, guid: 91f6959854d9b364b932ddf86604e15a, type: 3}
+  - passiveItemIndex: 0
+    initialItem: {fileID: 8162143158953995465, guid: 91f6959854d9b364b932ddf86604e15a, type: 3}
     passiveItemsData: {fileID: 11400000, guid: 7f89ce5bd6f48744eb4cc7930ed47c90, type: 2}
-  - initialItem: {fileID: 4277522862480780216, guid: 200066d264b71614fbcf6250b1ec3ca5, type: 3}
+  - passiveItemIndex: 1
+    initialItem: {fileID: 4277522862480780216, guid: 200066d264b71614fbcf6250b1ec3ca5, type: 3}
     passiveItemsData: {fileID: 11400000, guid: ab50be0ac32d52940b40e9da8aae98b7, type: 2}
   upgradeOptions:
   - upgradeTextUI: {fileID: 1879002838}
@@ -7816,9 +7820,9 @@ RectTransform:
   - {fileID: 1051377756}
   m_Father: {fileID: 594071455}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 334.34744, y: -188.22751}
   m_SizeDelta: {x: 672.4955, y: 102.3409}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1490806007
@@ -8252,9 +8256,9 @@ RectTransform:
   - {fileID: 415352538}
   m_Father: {fileID: 594071455}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 334.34744, y: -325.28455}
   m_SizeDelta: {x: 672.4955, y: 102.3409}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1556187832

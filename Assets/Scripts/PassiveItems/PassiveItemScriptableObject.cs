@@ -21,7 +21,7 @@ public class PassiveItemScriptableObject : ScriptableObject
 
 
     [SerializeField]
-    string name;        //no lo cambies en game/runtime
+    new string name;        //no lo cambies en game/runtime
     public string Name { get => name; private set => name = value; }
 
     [SerializeField]

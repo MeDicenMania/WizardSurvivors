@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PassiveItemScriptableObject
   multiplier: 15
   level: 1
-  nextLevelPrefab: {fileID: 8162143158953995465, guid: 62ffacd67ba564c43bdafe657267e196, type: 3}
-  icon: {fileID: -2710545709896772308, guid: 82e9baf75d932bc488b3c52688b04dc7, type: 3}
+  nextLevelPrefab: {fileID: 8162143158953995465, guid: 91f6959854d9b364b932ddf86604e15a, type: 3}
+  icon: {fileID: 2294465530402414069, guid: bdac1b52d1cad3b419b3c1715a320fe2, type: 3}
   name: Boots
   description: Makes you move faster

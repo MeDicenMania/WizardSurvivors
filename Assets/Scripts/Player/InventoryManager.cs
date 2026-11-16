@@ -19,12 +19,16 @@ public class InventoryManager : MonoBehaviour
     [System.Serializable]
     public class SpellUpgrade
     {
+        public int spellUpgradeIndex;
+
         public GameObject initialWeapon;
         public SpellsScriptableObjects spellsData;
     }
     [System.Serializable]
     public class PasiveItemUpgrade
     {
+        public int passiveItemIndex;
+
         public GameObject initialItem;
         public PassiveItemScriptableObject passiveItemsData;
 
@@ -76,7 +80,7 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
-    public void levelUpSpell(int slot)
+    public void levelUpSpell(int slot, int upgradeIndex)
     {
 
         if( spellSlots.Count > slot)
@@ -89,11 +93,14 @@ public class InventoryManager : MonoBehaviour
                 return;
             }
 
-            GameObject upgradeSpell = Instantiate(spell.spellData.NextLevelPrefab,transform.position,Quaternion.identity);
-            upgradeSpell.transform.SetParent(transform);
-            AddSpell(slot, upgradeSpell.GetComponent<SpellSystem>());
+            GameObject upgradedSpell = Instantiate(spell.spellData.NextLevelPrefab,transform.position,Quaternion.identity);
+            upgradedSpell.transform.SetParent(transform);
+            AddSpell(slot, upgradedSpell.GetComponent<SpellSystem>());
             Destroy(spell.gameObject);
-            spellLevels[slot] = upgradeSpell.GetComponent<SpellSystem>().spellData.Level;
+            spellLevels[slot] = upgradedSpell.GetComponent<SpellSystem>().spellData.Level;
+
+            spellUpgradeOptions[upgradeIndex].spellsData = upgradedSpell.GetComponent<SpellSystem>().spellData;
+
 
             if (GameManager.instance != null && GameManager.instance.ischoosingUpgrades)
             {
@@ -101,7 +108,7 @@ public class InventoryManager : MonoBehaviour
             }
         }
     }
-    public void levelUpItem(int slot)
+    public void levelUpItem(int slot, int upgradeIndex)
     {
         if (passiveItemSlots.Count > slot)
         {
@@ -118,6 +125,9 @@ public class InventoryManager : MonoBehaviour
             Destroy(passiveItem.gameObject);
             passiveItemsLevels[slot] = upgradePassiveItem.GetComponent<PassiveItem>().passiveItemData.Level;
 
+            passiveItemsUpgradeOptions[upgradeIndex].passiveItemsData = upgradePassiveItem.GetComponent<PassiveItem>().passiveItemData;
+
+
             if (GameManager.instance != null && GameManager.instance.ischoosingUpgrades)
             {
                 GameManager.instance.EndLevelUp();
@@ -126,13 +136,39 @@ public class InventoryManager : MonoBehaviour
     }
     void ApllyUpgradeOptions()
     {
+
+        List<SpellUpgrade> avaliableSpellUpgrades = new List<SpellUpgrade>(spellUpgradeOptions);
+        List <PasiveItemUpgrade> avaliablePassiveItemsUpgrades = new List<PasiveItemUpgrade>(passiveItemsUpgradeOptions);
+
+
         foreach (var upgradeOption in upgradeOptions)
         {
-            int upgradeType = Random.Range(1, 3);
+            if(avaliableSpellUpgrades.Count == 0 && avaliablePassiveItemsUpgrades.Count == 0)
+            {
+                return;
+            }
+
+            int upgradeType;
+
+            if(avaliableSpellUpgrades.Count == 0)
+            {
+                upgradeType = 2;
+            }
+            else if( avaliablePassiveItemsUpgrades.Count == 0)
+            {
+                upgradeType = 1;
+            }
+            else
+            {
+                upgradeType = Random.Range(1, 3);
+            }
+               
 
             if( upgradeType == 1)            //si la mejora es un arma 
             {
-                SpellUpgrade choosenSpellUpgrade = spellUpgradeOptions[Random.Range(0, spellUpgradeOptions.Count)];
+                SpellUpgrade choosenSpellUpgrade = avaliableSpellUpgrades[Random.Range(0, avaliableSpellUpgrades.Count)];
+
+                avaliableSpellUpgrades.Remove(choosenSpellUpgrade);
 
                 if(choosenSpellUpgrade != null)
                 {
@@ -146,7 +182,12 @@ public class InventoryManager : MonoBehaviour
                             
                             if(!newSpell)
                             {
-                                upgradeOption.upgradeButton.onClick.AddListener(() => levelUpSpell(i));
+                                if (!choosenSpellUpgrade.spellsData.NextLevelPrefab)
+                                {
+                                    break;
+                                }
+
+                                upgradeOption.upgradeButton.onClick.AddListener(() => levelUpSpell(i,choosenSpellUpgrade.spellUpgradeIndex));
 
 
                                 //ponemos descripcion y nombre
@@ -174,7 +215,9 @@ public class InventoryManager : MonoBehaviour
             }
             else if (upgradeType == 2)
             {
-                PasiveItemUpgrade choosePasiveItemUpgrade = passiveItemsUpgradeOptions[Random.Range(0, passiveItemsUpgradeOptions.Count)];
+                PasiveItemUpgrade choosePasiveItemUpgrade = avaliablePassiveItemsUpgrades[Random.Range(0, avaliablePassiveItemsUpgrades.Count)];
+
+                avaliablePassiveItemsUpgrades.Remove(choosePasiveItemUpgrade);
 
                 if(choosePasiveItemUpgrade != null)
                 {
@@ -188,7 +231,12 @@ public class InventoryManager : MonoBehaviour
 
                             if (!newPassiveItem)
                             {
-                                upgradeOption.upgradeButton.onClick.AddListener(() => levelUpItem(i));
+                                if (!choosePasiveItemUpgrade.passiveItemsData.NextLevelPrefab)
+                                {
+                                    break;
+                                }
+
+                                upgradeOption.upgradeButton.onClick.AddListener(() => levelUpItem(i,choosePasiveItemUpgrade.passiveItemIndex));
                                 upgradeOption.upgradeDescriptionUI.text = choosePasiveItemUpgrade.passiveItemsData.NextLevelPrefab.GetComponent<PassiveItem>().passiveItemData.Description;
                                 upgradeOption.upgradeTextUI.text = choosePasiveItemUpgrade.passiveItemsData.NextLevelPrefab.GetComponent<PassiveItem>().passiveItemData.Name;
                             }
