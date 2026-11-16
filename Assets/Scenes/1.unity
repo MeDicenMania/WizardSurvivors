@@ -949,7 +949,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 134.4328, y: 0}
+  m_SizeDelta: {x: 67.216, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &340959926
 MonoBehaviour:
@@ -1037,7 +1037,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: -1.6762085, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -1218,7 +1218,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -156, y: 286}
+  m_AnchoredPosition: {x: 860, y: 515}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &366851827
@@ -1476,8 +1476,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dee709fb997ad9049ae8ffd9f6e475d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Spawner
+  enemyFactory: {fileID: 0}
   waves:
-  - waveName: Wave 1
+  - waveName: 'Wave '
     enemyGroups:
     - enemyName: Bat
       enemyCount: 5
@@ -1489,29 +1490,104 @@ MonoBehaviour:
       spawnCount: 0
       enemyPrefab: {fileID: 7432616817929650736, guid: a36ae35befeef8c46b763f24202a09c4, type: 3}
       priority: 0
-    waveQuota: 0
+    waveQuota: 10
     spawnInterval: 1
     spawnCount: 0
   - waveName: Wave 1
     enemyGroups:
     - enemyName: redbat
-      enemyCount: 1
+      enemyCount: 7
       spawnCount: 0
       enemyPrefab: {fileID: 7432616817929650736, guid: a36ae35befeef8c46b763f24202a09c4, type: 3}
       priority: 0
     - enemyName: redbat
-      enemyCount: 1
+      enemyCount: 7
       spawnCount: 0
       enemyPrefab: {fileID: 7432616817929650736, guid: 36df00f7ca3e82f4ab5d227a749093a5, type: 3}
       priority: 0
-    waveQuota: 0
+    waveQuota: 14
+    spawnInterval: 1
+    spawnCount: 0
+  - waveName: Wave 3
+    enemyGroups:
+    - enemyName: redbat
+      enemyCount: 7
+      spawnCount: 0
+      enemyPrefab: {fileID: 7432616817929650736, guid: a36ae35befeef8c46b763f24202a09c4, type: 3}
+      priority: 0
+    - enemyName: redbat
+      enemyCount: 7
+      spawnCount: 0
+      enemyPrefab: {fileID: 7432616817929650736, guid: 36df00f7ca3e82f4ab5d227a749093a5, type: 3}
+      priority: 0
+    waveQuota: 14
+    spawnInterval: 1
+    spawnCount: 0
+  - waveName: Wave 4
+    enemyGroups:
+    - enemyName: redbat
+      enemyCount: 7
+      spawnCount: 0
+      enemyPrefab: {fileID: 7432616817929650736, guid: a36ae35befeef8c46b763f24202a09c4, type: 3}
+      priority: 0
+    - enemyName: redbat
+      enemyCount: 7
+      spawnCount: 0
+      enemyPrefab: {fileID: 7432616817929650736, guid: 36df00f7ca3e82f4ab5d227a749093a5, type: 3}
+      priority: 0
+    waveQuota: 14
+    spawnInterval: 1
+    spawnCount: 0
+  - waveName: Wave 5
+    enemyGroups:
+    - enemyName: redbat
+      enemyCount: 8
+      spawnCount: 0
+      enemyPrefab: {fileID: 7432616817929650736, guid: a36ae35befeef8c46b763f24202a09c4, type: 3}
+      priority: 0
+    - enemyName: redbat
+      enemyCount: 8
+      spawnCount: 0
+      enemyPrefab: {fileID: 7432616817929650736, guid: 36df00f7ca3e82f4ab5d227a749093a5, type: 3}
+      priority: 0
+    waveQuota: 16
+    spawnInterval: 1
+    spawnCount: 0
+  - waveName: Wave 6
+    enemyGroups:
+    - enemyName: redbat
+      enemyCount: 8
+      spawnCount: 0
+      enemyPrefab: {fileID: 7432616817929650736, guid: a36ae35befeef8c46b763f24202a09c4, type: 3}
+      priority: 0
+    - enemyName: redbat
+      enemyCount: 8
+      spawnCount: 0
+      enemyPrefab: {fileID: 7432616817929650736, guid: 36df00f7ca3e82f4ab5d227a749093a5, type: 3}
+      priority: 0
+    waveQuota: 16
+    spawnInterval: 1
+    spawnCount: 0
+  - waveName: Wave 7
+    enemyGroups:
+    - enemyName: redbat
+      enemyCount: 9
+      spawnCount: 0
+      enemyPrefab: {fileID: 7432616817929650736, guid: a36ae35befeef8c46b763f24202a09c4, type: 3}
+      priority: 0
+    - enemyName: redbat
+      enemyCount: 9
+      spawnCount: 0
+      enemyPrefab: {fileID: 7432616817929650736, guid: 36df00f7ca3e82f4ab5d227a749093a5, type: 3}
+      priority: 0
+    waveQuota: 18
     spawnInterval: 1
     spawnCount: 0
   currentWaveCount: 0
   waveInterval: 10
   enemiesAlive: 0
-  maxEnemiesAllowed: 15
-  maxEnemiesReached: 0
+  maxEnemiesAllowed: 20
+  maxEnemiesReached: 1
   relativeSpawnPoints:
   - {fileID: 1861331921}
   - {fileID: 228377619}
@@ -3785,8 +3861,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 212, y: -293.5}
-  m_SizeDelta: {x: -977.0365, y: -617}
+  m_AnchoredPosition: {x: 783, y: -510}
+  m_SizeDelta: {x: -1649.2563, y: -1050}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1017353250
 MonoBehaviour:
@@ -4943,7 +5019,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc4cfbd3e7cfbac4e846d508ad9270eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerStats
+  spawnedSpeells: []
+  gameFlowFacade: {fileID: 0}
   onPlayerHealthChange: {fileID: 11400000, guid: 1722be2821ede2e4a98d239c9acc01fc, type: 2}
+  currentMaxHealth: 0
   SpellIndex: 0
   ItemIndex: 0
   experience: 0
@@ -5465,6 +5544,53 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 374741574}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1445960758
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1445960760}
+  - component: {fileID: 1445960759}
+  m_Layer: 0
+  m_Name: GameStatusManager (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1445960759
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1445960758}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02566f97a6ba4154cbb86ac94d3caaf5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameStatusManager
+  player: {fileID: 1282466800}
+  saveKey: 103
+  restoreKey: 114
+--- !u!4 &1445960760
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1445960758}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.8804, y: 2.9017, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1457126125
 GameObject:
@@ -6781,7 +6907,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: -226, y: 15}
+  m_AnchoredPosition: {x: -771, y: 15}
   m_SizeDelta: {x: 231.6438, y: 30}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &2085768949
@@ -7076,53 +7202,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 34caa213dd5b185409aee93ce7edf647, type: 3}
---- !u!1 &1445960758
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1445960760}
-  - component: {fileID: 1445960759}
-  m_Layer: 0
-  m_Name: GameStatusManager (1)
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1445960759
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1445960758}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 02566f97a6ba4154cbb86ac94d3caaf5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::GameStatusManager
-  player: {fileID: 1282466800}
-  saveKey: 103
-  restoreKey: 114
---- !u!4 &1445960760
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1445960758}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.8804, y: 2.9017, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

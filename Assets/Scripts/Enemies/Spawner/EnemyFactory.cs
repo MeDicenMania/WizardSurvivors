@@ -5,7 +5,7 @@ using UnityEngine.Pool;
 /// <summary>
 /// PATRÓN FACTORY + PATRÓN OBJECT POOL (UnityEngine.Pool):
 /// Combina el Dictionary del Factory con un ObjectPool<EnemyStats> para cada tipo
-/// de enemigo, devolviendo la interfaz IEnemy y reciclando instancias sin usar Destroy().
+/// de enemigo, pre-instanciando los enemigos desactivados al inicio y activándolos/desactivándolos.
 /// </summary>
 public class EnemyFactory : MonoBehaviour
 {
@@ -17,8 +17,8 @@ public class EnemyFactory : MonoBehaviour
     [SerializeField] private int defaultCapacity = 10;
     [SerializeField] private int maxSize = 100;
 
-    private Dictionary<string, EnemyStats> idToEnemy;
-    private Dictionary<string, ObjectPool<EnemyStats>> enemyPools;
+    private Dictionary<string, EnemyStats> idToEnemy = new Dictionary<string, EnemyStats>();
+    private Dictionary<string, ObjectPool<EnemyStats>> enemyPools = new Dictionary<string, ObjectPool<EnemyStats>>();
 
     private void Awake()
     {
@@ -27,45 +27,57 @@ public class EnemyFactory : MonoBehaviour
 
     private void InitializeFactoryAndPools()
     {
-        idToEnemy = new Dictionary<string, EnemyStats>();
-        enemyPools = new Dictionary<string, ObjectPool<EnemyStats>>();
-
         if (enemies == null) return;
 
         foreach (var enemyPrefab in enemies)
         {
-            if (enemyPrefab != null && !idToEnemy.ContainsKey(enemyPrefab.Id))
+            if (enemyPrefab != null)
             {
-                string id = enemyPrefab.Id;
-                idToEnemy.Add(id, enemyPrefab);
-
-                // Creamos un ObjectPool<EnemyStats> para este tipo de enemigo (como en el PDF de Pool)
-                EnemyStats capturedPrefab = enemyPrefab;
-                ObjectPool<EnemyStats> pool = new ObjectPool<EnemyStats>(
-                    () => CreatePoolItem(capturedPrefab),
-                    OnTakeFromPool,
-                    OnReturnedToPool,
-                    OnDestroyPoolObject,
-                    collectionCheck,
-                    defaultCapacity,
-                    maxSize
-                );
-
-                enemyPools.Add(id, pool);
+                RegisterEnemyPrefab(enemyPrefab.Id, enemyPrefab);
             }
         }
     }
 
-    // =========================================================
-    // 4 FUNCIONES DEL PATRÓN POOL (según diapositiva 8 del PDF)
-    // =========================================================
+    public void RegisterEnemyPrefab(string id, EnemyStats enemyPrefab)
+    {
+        if (string.IsNullOrEmpty(id) || enemyPrefab == null) return;
+        if (enemyPools.ContainsKey(id)) return;
 
-    private EnemyStats CreatePoolItem(EnemyStats prefab)
+        idToEnemy[id] = enemyPrefab;
+
+        EnemyStats capturedPrefab = enemyPrefab;
+        string capturedId = id;
+
+        ObjectPool<EnemyStats> pool = new ObjectPool<EnemyStats>(
+            () => CreatePoolItem(capturedId, capturedPrefab),
+            OnTakeFromPool,
+            OnReturnedToPool,
+            OnDestroyPoolObject,
+            collectionCheck,
+            defaultCapacity,
+            maxSize
+        );
+
+        enemyPools.Add(id, pool);
+
+
+        List<EnemyStats> prewarmList = new List<EnemyStats>(defaultCapacity);
+        for (int i = 0; i < defaultCapacity; i++)
+        {
+            prewarmList.Add(pool.Get());
+        }
+        for (int i = 0; i < prewarmList.Count; i++)
+        {
+            pool.Release(prewarmList[i]);
+        }
+    }
+
+    private EnemyStats CreatePoolItem(string poolId, EnemyStats prefab)
     {
         EnemyStats enemy = Instantiate(prefab);
         enemy.gameObject.SetActive(false);
 
-        if (enemyPools.TryGetValue(prefab.Id, out ObjectPool<EnemyStats> pool))
+        if (enemyPools.TryGetValue(poolId, out ObjectPool<EnemyStats> pool))
         {
             enemy.SetPool(pool);
         }
@@ -88,24 +100,15 @@ public class EnemyFactory : MonoBehaviour
         Destroy(enemy.gameObject);
     }
 
-    // =========================================================
-    // MÉTODO CREATE DEL FACTORY (usa pool.Get() y devuelve IEnemy)
-    // =========================================================
 
     public IEnemy Create(string id, Vector3 spawnPosition)
     {
-        if (idToEnemy == null || enemyPools == null)
-        {
-            InitializeFactoryAndPools();
-        }
-
         if (!enemyPools.TryGetValue(id, out ObjectPool<EnemyStats> pool))
         {
             Debug.LogWarning($"[EnemyFactory] No se encontró ningún enemigo/pool con el ID '{id}'.");
             return null;
         }
 
-        // Tomamos una instancia reciclada del pool en lugar de hacer Instantiate siempre
         EnemyStats enemyInstance = pool.Get();
         enemyInstance.SetPool(pool);
         enemyInstance.Initialize(spawnPosition);

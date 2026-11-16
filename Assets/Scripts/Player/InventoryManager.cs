@@ -5,7 +5,7 @@ using Unity.Mathematics;
 using UnityEngine.UI;
 public class InventoryManager : MonoBehaviour
 {
-    public List<SpellController> spellSlots = new List<SpellController>(4);
+    public List<SpellSystem> spellSlots = new List<SpellSystem>(4);
     public List<PassiveItem> passiveItemSlots = new List<PassiveItem>(6);
 
     public List<Image> spellIconsUI = new List<Image>(4);
@@ -15,7 +15,7 @@ public class InventoryManager : MonoBehaviour
     public int[] passiveItemsLevels = new int [6];
 
 
-    public void AddSpell(int slot,SpellController newSpell)     //añade un nuevo hechizo a tu inventario/arsenal qsy
+    public void AddSpell(int slot,SpellSystem newSpell)     //añade un nuevo hechizo a tu inventario/arsenal qsy
     {
         spellSlots[slot] = newSpell;
         spellLevels[slot] = newSpell.spellData.Level;
@@ -38,7 +38,7 @@ public class InventoryManager : MonoBehaviour
 
         if( spellSlots.Count > slot)
         {
-            SpellController spell = spellSlots[slot];
+            SpellSystem spell = spellSlots[slot];
 
             if (!spell.spellData.NextLevelPrefab)
             {
@@ -48,9 +48,9 @@ public class InventoryManager : MonoBehaviour
 
             GameObject upgradeSpell = Instantiate(spell.spellData.NextLevelPrefab,transform.position,Quaternion.identity);
             upgradeSpell.transform.SetParent(transform);
-            AddSpell(slot, upgradeSpell.GetComponent<SpellController>());
+            AddSpell(slot, upgradeSpell.GetComponent<SpellSystem>());
             Destroy(spell.gameObject);
-            spellLevels[slot] = upgradeSpell.GetComponent<SpellController>().spellData.Level;
+            spellLevels[slot] = upgradeSpell.GetComponent<SpellSystem>().spellData.Level;
         }
     }
     public void levelUpItem(int slot)

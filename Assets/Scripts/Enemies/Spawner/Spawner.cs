@@ -11,6 +11,8 @@ public class Spawner : MonoBehaviour
 
     SimpleLinkedPriorityQueue<EnemyGroup> enemyQueue;
     bool isDifficultWave;
+    bool isWaitingForNextWave;
+
 
     [System.Serializable]
     public class Wave
@@ -29,7 +31,27 @@ public class Spawner : MonoBehaviour
             enemyFactory = GetComponent<EnemyFactory>();
             if (enemyFactory == null)
                 enemyFactory = FindAnyObjectByType<EnemyFactory>();
+            if (enemyFactory == null)
+                enemyFactory = gameObject.AddComponent<EnemyFactory>();
         }
+
+        // Registramos automáticamente los prefabs de las oleadas en el Factory + Pool
+        // para que al dar Play ya se pre-instancien desactivados en la escena
+        foreach (var wave in waves)
+        {
+            foreach (var group in wave.enemyGroups)
+            {
+                if (group.enemyPrefab != null)
+                {
+                    EnemyStats stats = group.enemyPrefab.GetComponent<EnemyStats>();
+                    if (stats != null)
+                    {
+                        enemyFactory.RegisterEnemyPrefab(group.enemyName, stats);
+                    }
+                }
+            }
+        }
+
         player = FindAnyObjectByType<PlayerStats>().transform;
         enemyQueue = new SimpleLinkedPriorityQueue<EnemyGroup>();
 
@@ -76,7 +98,7 @@ public class Spawner : MonoBehaviour
      void Update()
     {
 
-        if( currentWaveCount < waves.Count && waves[currentWaveCount].spawnCount == 0)
+        if( currentWaveCount < waves.Count && waves[currentWaveCount].spawnCount == 0 && !isWaitingForNextWave)
         {
             StartCoroutine(BeginNextWave());
         }
@@ -141,7 +163,7 @@ public class Spawner : MonoBehaviour
 
     IEnumerator BeginNextWave()
     {
-        
+        isWaitingForNextWave = true;
         yield return new WaitForSeconds(waveInterval);
 
         // si hay mas oleadas se mueve a la siguente digamos
@@ -152,6 +174,7 @@ public class Spawner : MonoBehaviour
             CheckDifficultWave();
 
         }
+        isWaitingForNextWave = false;
     }
 
     public void CalculateWaveQuota()

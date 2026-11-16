@@ -290,7 +290,7 @@ public class PlayerStats : MonoBehaviour
 
         if (inventory != null)
         {
-            inventory.AddSpell(SpellIndex, spawnSpell.GetComponent<SpellController>());
+            inventory.AddSpell(SpellIndex, spawnSpell.GetComponent<SpellSystem>());
         }
 
         SpellIndex++;
@@ -317,9 +317,6 @@ public class PlayerStats : MonoBehaviour
         ItemIndex++;
     }
 
-    // ==========================================
-    // PATRÓN MEMENTO (Originador / Originator)
-    // ==========================================
 
     // Crea un memento con el estado actual del jugador
     public PlayerMemento SaveState()
