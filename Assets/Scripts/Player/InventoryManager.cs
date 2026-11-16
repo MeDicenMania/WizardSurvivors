@@ -42,16 +42,59 @@ public class InventoryManager : MonoBehaviour
     public List<SpellUpgrade> spellUpgradeOptions = new List<SpellUpgrade>();
     public List<PasiveItemUpgrade> passiveItemsUpgradeOptions = new List<PasiveItemUpgrade>();
     public List<UpgradeUI> upgradeOptions = new List<UpgradeUI>();
+    [Header("Spell progression data")]
+    [SerializeField] private SpellSkillTree spellSkillTree;
+    [SerializeField] private SpellPurchaseGraph spellPurchaseGraph;
 
     PlayerStats stats;
 
 
-    private void Start()
+    private void Awake()
     {
         stats = GetComponent<PlayerStats>();
+        EnsureSlots(spellSlots, 4);
+        EnsureSlots(passiveItemSlots, 6);
+        EnsureSlots(spellIconsUI, 4);
+        EnsureSlots(passiveitemconsUI, 6);
+    }
+
+    private static void EnsureSlots<T>(List<T> slots, int count) where T : class
+    { while (slots.Count < count) slots.Add(null); }
+
+    /// <summary>Validates the skill tree and cheapest graph route, then buys the spell for XP.</summary>
+    public bool TryPurchaseSpell(SpellsScriptableObjects target)
+    {
+        if (target == null || spellSkillTree == null || spellPurchaseGraph == null || stats == null) return false;
+        HashSet<SpellsScriptableObjects> owned = new HashSet<SpellsScriptableObjects>();
+        foreach (SpellSystem spell in spellSlots)
+            if (spell != null && spell.spellData != null) owned.Add(spell.spellData);
+        if (owned.Contains(target) || !spellSkillTree.Contains(target)) return false;
+        if (!spellSkillTree.GetUnlockableSpells(owned).Contains(target)) return false;
+
+        SpellPurchaseGraph.PurchasePath cheapest = null;
+        foreach (SpellsScriptableObjects source in owned)
+            if (spellPurchaseGraph.TryGetCheapestPath(source, target, out SpellPurchaseGraph.PurchasePath candidate) &&
+                (cheapest == null || candidate.totalCost < cheapest.totalCost)) cheapest = candidate;
+        if (cheapest == null || stats.experience < cheapest.totalCost || stats.SpellIndex >= spellSlots.Count) return false;
+
+        GameObject prefab = FindSpellPrefab(target);
+        if (prefab == null) return false;
+        stats.experience -= cheapest.totalCost;
+        stats.SpawnSpell(prefab);
+        return true;
+    }
+
+    private GameObject FindSpellPrefab(SpellsScriptableObjects data)
+    {
+        foreach (SpellUpgrade option in spellUpgradeOptions)
+            if (option != null && option.spellsData == data) return option.initialWeapon;
+        return null;
     }
     public void AddSpell(int slot, SpellSystem newSpell)     //añade un nuevo hechizo a tu inventario/arsenal qsy
     {
+        EnsureSlots(spellSlots, 4);
+        EnsureSlots(spellIconsUI, 4);
+        if (slot < 0 || slot >= spellSlots.Count) return;
         spellSlots[slot] = newSpell;
         spellLevels[slot] = newSpell.spellData.Level;
         spellIconsUI[slot].enabled = true;
@@ -65,6 +108,9 @@ public class InventoryManager : MonoBehaviour
     
     public void AddPassiveItem(int slot,PassiveItem newItem)
     {
+        EnsureSlots(passiveItemSlots, 6);
+        EnsureSlots(passiveitemconsUI, 6);
+        if (slot < 0 || slot >= passiveItemSlots.Count) return;
         passiveItemSlots[slot] = newItem;
         passiveItemsLevels[slot] = newItem.passiveItemData.Level;
         passiveitemconsUI[slot].enabled = true;
