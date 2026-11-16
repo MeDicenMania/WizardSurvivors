@@ -39,7 +39,7 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI timereachedUI; // tiempo que se muestra al final de la run cuando moris digamos
 
     public GameObject playerobject;
-
+    private InventoryManager inventory;
     //BOOLS
     public bool ischoosingUpgrades = false; //chequea si el jugador esta eligiendo mejoras osea se pausa el tiempo todo
 
@@ -47,6 +47,7 @@ public class GameManager : MonoBehaviour
     public static GameManager instance;
     private void Awake()
     {
+
         if(instance == null)
         {
             instance = this;
@@ -56,6 +57,7 @@ public class GameManager : MonoBehaviour
             Debug.LogError("extra manager");
             Destroy(gameObject);
         }
+        inventory = FindAnyObjectByType<InventoryManager>();
         DisableMenus();
     }
     void Update()
@@ -108,7 +110,13 @@ public class GameManager : MonoBehaviour
             ChangeState(GameState.Paused);
             Time.timeScale = 0;               //esto pausa el tiempo o sea pausa el juego digamos
             pauseScreen.SetActive(true);
-            Debug.Log("en pausa");
+
+            if (inventory != null)
+            {
+                inventory.ShowLastUpgrade();
+            }
+
+            
         }
 
        

@@ -52,6 +52,11 @@ public class InventoryManager : MonoBehaviour
 
     PlayerStats stats;
 
+    //Upgrade history 
+    [Header("Upgrade history")]
+    [SerializeField] private TextMeshProUGUI upgradeNameText;
+    [SerializeField] private TextMeshProUGUI upgradeDescriptionText;
+
 
     private void Awake()
     {
@@ -322,8 +327,25 @@ public class InventoryManager : MonoBehaviour
     {
         RemoveUpgradeOptions();
         ApllyUpgradeOptions();
-    } 
+    }
+
+  
+    public void ShowLastUpgrade()
+    {
+        if (stats == null || stats.UpgradeCount == 0)
+        {
+            upgradeNameText.text = "Sin mejoras";
+            upgradeDescriptionText.text = "";
+            return;
+        }
+
+        PlayerUpgradesList lastUpgrade =
+            stats.GetUpgrade(stats.UpgradeCount - 1);
+
+        upgradeNameText.text = lastUpgrade.upgradeName;
+        upgradeDescriptionText.text = lastUpgrade.description;
+    }
 
 
- }
+}
 

@@ -6,5 +6,6 @@ public class PassiveItemN1 : PassiveItem
     protected override void ApplyModifier()
     {
         player.CurrentMoveSpeed *= 1 + passiveItemData.Multiplier / 100f;
+        player.RegisterUpgrade(passiveItemData.Name, passiveItemData.Description);
     }
 }

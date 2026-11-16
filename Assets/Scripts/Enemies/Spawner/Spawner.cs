@@ -59,7 +59,7 @@ public class Spawner : MonoBehaviour
         CheckDifficultWave();
 
 
-        Debug.Log("Elementos en cola al iniciar: " + enemyQueue.Count);
+       
 
 
     }
@@ -189,7 +189,7 @@ public class Spawner : MonoBehaviour
 
         waves[currentWaveCount].waveQuota = currentWaveQuota;
 
-        Debug.LogWarning("TOTAL: " + currentWaveQuota);
+        
     }
 
 

@@ -3,9 +3,21 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-
+using ED262C;
 public class PlayerStats : MonoBehaviour
 {
+
+    //Estructura LIST estatica 
+    private SimpleArrayList<PlayerUpgradesList> playerUpgrades;
+
+    public int UpgradeCount => playerUpgrades.Count;
+
+    public PlayerUpgradesList GetUpgrade(int index)
+    {
+        return playerUpgrades[index];
+    }
+
+
     WizardsScriptableObject wizardData;
     public List<GameObject> spawnedSpeells = new List<GameObject>();
 
@@ -136,6 +148,8 @@ public class PlayerStats : MonoBehaviour
 
     void Awake()
     {
+        playerUpgrades = new SimpleArrayList<PlayerUpgradesList>();
+
         if (gameFlowFacade == null)
         {
             gameFlowFacade = FindAnyObjectByType<GameFlowFacade>();
@@ -146,16 +160,22 @@ public class PlayerStats : MonoBehaviour
 
         inventory = GetComponent<InventoryManager>();
 
+        //recibir datos de wizardata al comenzar
         currentMaxHealth = wizardData.MaxHealth;
         CurrentDamage = wizardData.Damage;
         CurrentMoveSpeed = wizardData.MoveSpeed;
         CurrentRegen = wizardData.Regen;
         CurrentProjectileSpeed = wizardData.ProjectileSpeed;
         CurrentMagnet = wizardData.Magnet;
+        
+
 
         SpawnSpell(wizardData.StartingSpell);
         SpawnItem(item1);
-       // SpawnItem(item2);
+        // SpawnItem(item2);
+
+    
+
     }
 
     void Start()
@@ -186,6 +206,16 @@ public class PlayerStats : MonoBehaviour
         }
         Recover();
     }
+
+    public void RegisterUpgrade(string upgradeName, string description)
+    {
+        playerUpgrades.Add(new PlayerUpgradesList(upgradeName, description));
+
+        inventory.ShowLastUpgrade();
+
+        Debug.Log("Mejora obtenida: " + upgradeName);
+    }
+
 
     public void IncreaseExperience(int amount)
     {
