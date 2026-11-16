@@ -15,5 +15,9 @@ public class AuraController : SpellSystem
         GameObject spawnedAura = Instantiate(spellData.Prefab);
         spawnedAura.transform.position = transform.position;
         spawnedAura.transform.parent = transform;
+        MeleSpells aura = spawnedAura.GetComponent<MeleSpells>();
+        if (aura != null)
+            aura.ApplySkillBonuses(spellData.Damage + bonusDamage,
+                spellData.Speed + bonusSpeed, spellData.Pierce + bonusPierce);
     }
 }

@@ -3,8 +3,14 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using UnityEngine.Events;
 public class PlayerStats : MonoBehaviour
 {
+    public class SpellUpgradeOption
+    {
+        public GameObject spellInstance;
+        public SpellSkillTree.SkillNode upgrade;
+    }
      WizardsScriptableObject wizardData;
     public List<GameObject> spawnedSpeells;
 
@@ -26,6 +32,12 @@ public class PlayerStats : MonoBehaviour
     public int experience = 0;
     public int level = 1;
     public int experienceCap;
+    [SerializeField] private ExperienceRequirementAVL experienceRequirements;
+    [SerializeField] private int spellCurrency;
+    [SerializeField] private UnityEvent<int> onPlayerLevelUp = new UnityEvent<int>();
+    public int SpellCurrency => spellCurrency;
+    public UnityEvent<int> OnPlayerLevelUp => onPlayerLevelUp;
+    private readonly HashSet<string> ownedSpellIds = new HashSet<string>();
 
 
     [System.Serializable] 
@@ -63,7 +75,10 @@ public class PlayerStats : MonoBehaviour
 
      void Start()
     {
-        experienceCap = levelRanges[0].experienceCapIncrease;
+        if (experienceRequirements != null && experienceRequirements.TryGetRequirement(level + 1, out int firstRequirement))
+            experienceCap = firstRequirement;
+        else if (levelRanges != null && levelRanges.Count > 0)
+            experienceCap = levelRanges[0].experienceCapIncrease;
     }
     
      void Update()
@@ -80,30 +95,81 @@ public class PlayerStats : MonoBehaviour
     }
     public void IncreaseExperience(int amount)
     {
+        if (amount <= 0) return;
         experience += amount;
+        while (experienceCap > 0 && experience >= experienceCap)
+        {
+            experience -= experienceCap;
+            level++;
+            UpdateExperienceCap();
+            if (onPlayerLevelUp == null) onPlayerLevelUp = new UnityEvent<int>();
+            onPlayerLevelUp?.Invoke(level);
+        }
     }
 
-    void LevelUpCheker()
+    private void UpdateExperienceCap()
     {
-        if(experience >= experienceCap)
+        if (experienceRequirements != null && experienceRequirements.TryGetRequirement(level + 1, out int requirement))
         {
-            level++;
-            experience -= experienceCap;
-
-            int experienceCapIncrease = 0;
-
-            foreach(LevelRange range in levelRanges)
-            {
-                if(level >= range.startLevel && level >= range.endLevel)
-                {
-                    experienceCapIncrease = range.experienceCapIncrease;
-                        break;
-                }
-            }
-
-            experienceCap += experienceCapIncrease;
-
+            experienceCap = requirement;
+            return;
         }
+
+        if (levelRanges == null) { experienceCap = 0; return; }
+        for (int i = 0; i < levelRanges.Count; i++)
+        {
+            LevelRange range = levelRanges[i];
+            if (range != null && level >= range.startLevel && level <= range.endLevel)
+            {
+                experienceCap += range.experienceCapIncrease;
+                return;
+            }
+        }
+        experienceCap = 0;
+    }
+
+    public bool HasSpellInInventory(string spellId) => !string.IsNullOrWhiteSpace(spellId) && ownedSpellIds.Contains(spellId);
+    public void RegisterSpellInInventory(string spellId)
+    {
+        if (!string.IsNullOrWhiteSpace(spellId)) ownedSpellIds.Add(spellId);
+    }
+    public bool TrySpendSpellCurrency(int amount)
+    {
+        if (amount < 0 || spellCurrency < amount) return false;
+        spellCurrency -= amount;
+        return true;
+    }
+    public void AddSpellCurrency(int amount)
+    {
+        if (amount > 0) spellCurrency += amount;
+    }
+
+    public List<SpellUpgradeOption> GetAvailableSpellUpgrades()
+    {
+        List<SpellUpgradeOption> options = new List<SpellUpgradeOption>();
+        if (spawnedSpeells == null) return options;
+        for (int i = 0; i < spawnedSpeells.Count; i++)
+        {
+            GameObject spell = spawnedSpeells[i];
+            if (spell == null) continue;
+            SpellSkillTree tree = spell.GetComponent<SpellSkillTree>();
+            if (tree == null) continue;
+            List<SpellSkillTree.SkillNode> available = tree.GetAvailableUpgrades(level);
+            for (int n = 0; n < available.Count; n++)
+                options.Add(new SpellUpgradeOption { spellInstance = spell, upgrade = available[n] });
+        }
+        return options;
+    }
+
+    public bool TryAcquireSpellUpgrade(GameObject spellInstance, string upgradeId)
+    {
+        if (spellInstance == null || spawnedSpeells == null || !spawnedSpeells.Contains(spellInstance)) return false;
+        SpellSkillTree tree = spellInstance.GetComponent<SpellSkillTree>();
+        if (tree == null || !tree.TryAcquireUpgrade(upgradeId, level)) return false;
+
+        SpellSystem controller = spellInstance.GetComponent<SpellSystem>();
+        if (controller != null) controller.RefreshBonusesAfterUpgrade();
+        return true;
     }
 
 
@@ -158,8 +224,10 @@ public class PlayerStats : MonoBehaviour
 
     public void SpawnSpell(GameObject spell)
     {
+        if (spell == null) return;
         GameObject spawnSpell = Instantiate(spell, transform.position, Quaternion.identity);
         spawnSpell.transform.SetParent(transform);
+        if (spawnedSpeells == null) spawnedSpeells = new List<GameObject>();
         spawnedSpeells.Add(spawnSpell);
     }
 

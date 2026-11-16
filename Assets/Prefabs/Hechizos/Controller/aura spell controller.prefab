@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5359512029380822766}
   - component: {fileID: 5587101896163502202}
+  - component: {fileID: 68069247085842059}
   m_Layer: 0
   m_Name: aura spell controller
   m_TagString: Untagged
@@ -46,3 +47,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AuraController
   spellData: {fileID: 11400000, guid: d91192ca4bdb9f943abcbd47bbfca112, type: 2}
   currentCooldown: 0
+--- !u!114 &68069247085842059
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7397856654757198459}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a57d371139cc5a447a396ceff5976e3d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SpellSkillTree
+  roots:
+  - rid: -2
+  - rid: -2
+  - rid: -2
+  - rid: -2
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }

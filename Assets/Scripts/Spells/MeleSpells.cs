@@ -21,6 +21,13 @@ public class MeleSpells : MonoBehaviour
         currentSpeed = SpellData.Speed;
     }
 
+    public void ApplySkillBonuses(float damage, float speed, float pierce)
+    {
+        currentDamage = damage;
+        currentSpeed = speed;
+        currentPierce = pierce;
+    }
+
     protected virtual void Start()
     {
         Destroy(gameObject, destroyDelay);

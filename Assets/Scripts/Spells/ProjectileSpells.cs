@@ -19,6 +19,14 @@ public class ProjectileSpells : MonoBehaviour
         currentCooldown = spellData.Cooldown;
         currentSpeed = spellData.Speed;
         currentDamage = spellData.Damage;
+        currentPierce = spellData.Pierce;
+    }
+
+    public void ApplySkillBonuses(float damage, float speed, float pierce)
+    {
+        currentDamage = damage;
+        currentSpeed = speed;
+        currentPierce = pierce;
     }
 
     protected virtual void Start()

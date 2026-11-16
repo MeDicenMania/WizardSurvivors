@@ -14,7 +14,13 @@ public class SpellController : SpellSystem
         base.Cast();
         GameObject iceSpawned = Instantiate(spellData.Prefab);
         iceSpawned.transform.position = transform.position;
-        iceSpawned.GetComponent<IceKnife>().DirectionCheck(pc.lastMovedVector);
+        IceKnife projectile = iceSpawned.GetComponent<IceKnife>();
+        if (projectile != null)
+        {
+            projectile.ApplySkillBonuses(spellData.Damage + bonusDamage,
+                spellData.Speed + bonusSpeed, spellData.Pierce + bonusPierce);
+            projectile.DirectionCheck(pc.lastMovedVector);
+        }
        
     }
 }

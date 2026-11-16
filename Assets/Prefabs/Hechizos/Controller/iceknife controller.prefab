@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 812117772803162627}
   - component: {fileID: 5780174504692380692}
+  - component: {fileID: 820715495399125403}
   m_Layer: 0
   m_Name: iceknife controller
   m_TagString: Untagged
@@ -46,3 +47,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::IceController
   spellData: {fileID: 11400000, guid: c18379ca76917cf419a1513e21be7db7, type: 2}
   currentCooldown: 0
+--- !u!114 &820715495399125403
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1936880328677392749}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a57d371139cc5a447a396ceff5976e3d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SpellSkillTree
+  roots:
+  - rid: -2
+  - rid: -2
+  - rid: -2
+  - rid: -2
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }

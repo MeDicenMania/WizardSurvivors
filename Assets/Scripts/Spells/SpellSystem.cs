@@ -9,16 +9,17 @@ public class SpellSystem : MonoBehaviour
     public SpellsScriptableObjects spellData;
     
     public float currentCooldown;
-   
+    protected SpellSkillTree skillTree;
+    protected float bonusDamage, bonusSpeed, bonusCooldown, bonusPierce;
 
     protected PlayerController pc;
 
   protected virtual void Start()
     {
         pc = FindAnyObjectByType<PlayerController>();
-     
-
-        currentCooldown = spellData.Cooldown;
+        skillTree = GetComponent<SpellSkillTree>();
+        RefreshSkillBonuses();
+        currentCooldown = GetEffectiveCooldown();
     }
 
     // Update is called once per frame
@@ -37,6 +38,22 @@ public class SpellSystem : MonoBehaviour
 
     protected virtual void Cast()
     {
-        currentCooldown = spellData.Cooldown;
+        currentCooldown = GetEffectiveCooldown();
+    }
+
+    protected void RefreshSkillBonuses()
+    {
+        if (skillTree != null)
+            skillTree.GetBonuses(out bonusDamage, out bonusSpeed, out bonusCooldown, out bonusPierce);
+    }
+
+    public void RefreshBonusesAfterUpgrade()
+    {
+        RefreshSkillBonuses();
+    }
+
+    private float GetEffectiveCooldown()
+    {
+        return Mathf.Max(0.05f, spellData.Cooldown - bonusCooldown);
     }
 }

@@ -58,6 +58,24 @@ public class BST<T> where T : IComparable<T>
         return false;
     }
 
+    public bool TryGetValue(T value, out T foundValue)
+    {
+        TreeNode<T> current = root;
+        while (current != null)
+        {
+            int comparison = value.CompareTo(current.Value);
+            if (comparison == 0)
+            {
+                foundValue = current.Value;
+                return true;
+            }
+            current = comparison < 0 ? current.Left : current.Right;
+        }
+
+        foundValue = default(T);
+        return false;
+    }
+
     public virtual void Remove(T value)
     {
         root = RemoveRecursive(root, value);
