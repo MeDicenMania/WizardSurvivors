@@ -114,6 +114,7 @@ public class PlayerStats : MonoBehaviour
     public int experience = 0;
     public int level = 1;
     public int experienceCap;
+    [SerializeField] private ExperienceCurveAVL experienceCurve;
 
     [System.Serializable]
     public class LevelRange
@@ -159,7 +160,7 @@ public class PlayerStats : MonoBehaviour
 
     void Start()
     {
-        experienceCap = levelRanges[0].experienceCapIncrease;
+        experienceCap = GetExperienceRequired(level);
 
         if (GameManager.instance != null)
         {
@@ -194,23 +195,11 @@ public class PlayerStats : MonoBehaviour
 
     void LevelUpCheker()
     {
-        if (experience >= experienceCap)
+        while (experience >= experienceCap && experienceCap > 0)
         {
             level++;
             experience -= experienceCap;
-
-            int experienceCapIncrease = 0;
-
-            foreach (LevelRange range in levelRanges)
-            {
-                if (level >= range.startLevel && level <= range.endLevel)
-                {
-                    experienceCapIncrease = range.experienceCapIncrease;
-                    break;
-                }
-            }
-
-            experienceCap += experienceCapIncrease;
+            experienceCap = GetExperienceRequired(level);
 
             GameManager.instance.StartLevelUp();
 
@@ -219,6 +208,18 @@ public class PlayerStats : MonoBehaviour
                 gameFlowFacade.NotifyLevelUp(level);
             }
         }
+    }
+
+    private int GetExperienceRequired(int targetLevel)
+    {
+        int fallback = levelRanges != null && levelRanges.Count > 0 ? Mathf.Max(1, levelRanges[0].experienceCapIncrease) : 1;
+        // Preserve the prior range-based curve when no AVL asset is assigned.
+        if (levelRanges != null)
+            for (int current = 2; current <= targetLevel; current++)
+                foreach (LevelRange range in levelRanges)
+                    if (range != null && current >= range.startLevel && current <= range.endLevel)
+                    { fallback = Mathf.Max(1, fallback + range.experienceCapIncrease); break; }
+        return experienceCurve != null ? experienceCurve.GetRequiredExperience(targetLevel, fallback) : fallback;
     }
 
     public void TakeDamage(float dmg)
@@ -280,7 +281,7 @@ public class PlayerStats : MonoBehaviour
 
     public void SpawnSpell(GameObject spell)
     {
-        if (inventory != null && SpellIndex >= inventory.spellSlots.Count - 1)
+        if (inventory != null && SpellIndex >= inventory.spellSlots.Count)
         {
             Debug.LogError("spelllimitreached");
             return;
@@ -302,7 +303,7 @@ public class PlayerStats : MonoBehaviour
     {
         if (passiveItem == null) return;
 
-        if (inventory != null && ItemIndex >= inventory.passiveItemSlots.Count - 1)
+        if (inventory != null && ItemIndex >= inventory.passiveItemSlots.Count)
         {
             Debug.LogError("spelllimitreached");
             return;
