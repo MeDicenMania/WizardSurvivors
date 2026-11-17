@@ -1,43 +1,64 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-/// <summary>
-/// Controls the order in which game scenes are shown.
-/// The queue defines the forward flow (FIFO) and the stack stores
-/// visited scenes for back navigation (LIFO).
-/// </summary>
 public class ScreenFlowController : MonoBehaviour
 {
+    private static ScreenFlowController instance;
+
     [SerializeField] private string[] screenOrder;
 
-    private readonly Queue<string> screenQueue = new Queue<string>();
+    private ScreenPriorityQueue<string> screenQueue;
     private readonly Stack<string> screenHistory = new Stack<string>();
+    private int nextPriority;
 
     private void Awake()
     {
+        if (instance != null && instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        instance = this;
+        DontDestroyOnLoad(gameObject);
+
+        screenQueue = new ScreenPriorityQueue<string>();
+
+        if (screenOrder == null)
+        {
+            return;
+        }
+
         foreach (string screen in screenOrder)
         {
             if (!string.IsNullOrWhiteSpace(screen))
             {
-                screenQueue.Enqueue(screen);
+                screenQueue.Enqueue(screen, nextPriority++);
             }
         }
     }
 
-    /// <summary>Adds a screen to the end of the forward flow.</summary>
+    private void OnDestroy()
+    {
+        if (instance == this)
+        {
+            instance = null;
+        }
+    }
+
     public void EnqueueScreen(string screenName)
     {
         if (!string.IsNullOrWhiteSpace(screenName))
         {
-            screenQueue.Enqueue(screenName);
+            screenQueue.Enqueue(screenName, nextPriority++);
         }
     }
 
-    /// <summary>Opens the next queued screen and records the current one.</summary>
     public void ShowNextScreen()
     {
-        if (screenQueue.Count == 0)
+        if (screenQueue.IsEmpty)
         {
             Debug.LogWarning("No hay más pantallas en la cola.", this);
             return;
@@ -53,7 +74,6 @@ public class ScreenFlowController : MonoBehaviour
         }
     }
 
-    /// <summary>Returns to the most recently visited screen.</summary>
     public void GoBack()
     {
         if (screenHistory.Count == 0)
@@ -62,7 +82,89 @@ public class ScreenFlowController : MonoBehaviour
             return;
         }
 
-        string previousScreen = screenHistory.Pop();
-        SceneManager.LoadScene(previousScreen);
+        SceneManager.LoadScene(screenHistory.Pop());
+    }
+}
+
+// Cola enlazada con prioridad, basada en SimpleLinkedPriorityQueue<T>.
+// Un valor de prioridad menor se atiende primero.
+internal sealed class ScreenPriorityQueue<T>
+{
+    private ScreenPriorityNode<T> first;
+    private ScreenPriorityNode<T> last;
+    private int count;
+
+    public int Count => count;
+    public bool IsEmpty => count == 0;
+
+    public void Enqueue(T item, int priority)
+    {
+        ScreenPriorityNode<T> newNode = new ScreenPriorityNode<T>(item, priority);
+
+        if (IsEmpty)
+        {
+            first = newNode;
+            last = newNode;
+            count++;
+            return;
+        }
+
+        if (priority < first.Priority)
+        {
+            newNode.Next = first;
+            first = newNode;
+            count++;
+            return;
+        }
+
+        ScreenPriorityNode<T> current = first;
+
+        while (current.Next != null && current.Next.Priority <= priority)
+        {
+            current = current.Next;
+        }
+
+        newNode.Next = current.Next;
+        current.Next = newNode;
+
+        if (newNode.Next == null)
+        {
+            last = newNode;
+        }
+
+        count++;
+    }
+
+    public T Dequeue()
+    {
+        if (IsEmpty)
+        {
+            throw new InvalidOperationException("La cola de pantallas está vacía.");
+        }
+
+        T item = first.Item;
+        first = first.Next;
+        count--;
+
+        if (count == 0)
+        {
+            last = null;
+        }
+
+        return item;
+    }
+}
+
+internal sealed class ScreenPriorityNode<T>
+{
+    public T Item;
+    public int Priority;
+    public ScreenPriorityNode<T> Next;
+
+    public ScreenPriorityNode(T item, int priority)
+    {
+        Item = item;
+        Priority = priority;
+        Next = null;
     }
 }
