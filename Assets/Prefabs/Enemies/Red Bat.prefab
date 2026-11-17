@@ -208,5 +208,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ExperienceDrop
   drops:
   - name: blueExperience
-    prefab: {fileID: 5257465303667546224, guid: 61ae15ffcc9fc5541bcd25e6aef41aaa, type: 3}
+    prefab: {fileID: 5257465303667546224, guid: e357d3cfe0eda764c9862dfce04f0dd5, type: 3}
     dropRate: 100

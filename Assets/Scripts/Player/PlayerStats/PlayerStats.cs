@@ -42,7 +42,7 @@ public class PlayerStats : MonoBehaviour
             {
                 currentDamage = value;
 
-                Debug.Log("CAMBIO EL DAÑO");
+                
 
                 if (GameManager.instance != null)
                 {
@@ -126,6 +126,12 @@ public class PlayerStats : MonoBehaviour
     public int experience = 0;
     public int level = 1;
     public int experienceCap;
+
+
+    [Header("Tokens")]
+    public int token = 0;
+
+
     [SerializeField] private ExperienceCurveAVL experienceCurve;
 
     [System.Serializable]
@@ -222,6 +228,20 @@ public class PlayerStats : MonoBehaviour
         experience += amount;
         LevelUpCheker();
     }
+    public void IncreaseTokens(int amount)
+    {
+        token += amount;
+    }
+
+    public bool SpendTokens(int amount)
+    {
+        if (token < amount)
+            return false;
+
+        token -= amount;
+        return true;
+    }
+
 
     void LevelUpCheker()
     {

@@ -18,3 +18,6 @@ MonoBehaviour:
   icon: {fileID: -580196069293764540, guid: b50d91f914dd6764ea306c6a15b6311a, type: 3}
   name: Book Level 2
   description: Increase damage by 5
+  tokenPrice: 7
+  isShopItem: 1
+  upgradeID: 4

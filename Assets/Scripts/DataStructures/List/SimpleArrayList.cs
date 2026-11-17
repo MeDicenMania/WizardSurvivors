@@ -217,5 +217,22 @@ namespace ED262C
             // Devolvemos el array completo
             return result;
         }
+        public void Reverse()
+        {
+            int left = 0;
+            int right = count - 1;
+
+            while (left < right)
+            {
+                T temp = internalArray[left];
+                internalArray[left] = internalArray[right];
+                internalArray[right] = temp;
+
+                left++;
+                right--;
+            }
+        }
+
     }
+
 }

@@ -71,26 +71,152 @@ public class InventoryManager : MonoBehaviour
     { while (slots.Count < count) slots.Add(null); }
 
     /// <summary>Validates the skill tree and cheapest graph route, then buys the spell for XP.</summary>
-    public bool TryPurchaseSpell(SpellsScriptableObjects target)
+    //public bool TryPurchaseSpell(SpellsScriptableObjects target)
+    //{
+    //    if (target == null || spellSkillTree == null || spellPurchaseGraph == null || stats == null) return false;
+    //    HashSet<SpellsScriptableObjects> owned = new HashSet<SpellsScriptableObjects>();
+    //    foreach (SpellSystem spell in spellSlots)
+    //        if (spell != null && spell.spellData != null) owned.Add(spell.spellData);
+    //    if (owned.Contains(target) || !spellSkillTree.Contains(target)) return false;
+    //    if (!spellSkillTree.GetUnlockableSpells(owned).Contains(target)) return false;
+
+    //    SpellPurchaseGraph.PurchasePath cheapest = null;
+    //    foreach (SpellsScriptableObjects source in owned)
+    //        if (spellPurchaseGraph.TryGetCheapestPath(source, target, out SpellPurchaseGraph.PurchasePath candidate) &&
+    //            (cheapest == null || candidate.totalCost < cheapest.totalCost)) cheapest = candidate;
+    //    if (cheapest == null || stats.experience < cheapest.totalCost || stats.SpellIndex >= spellSlots.Count) return false;
+
+    //    GameObject prefab = FindSpellPrefab(target);
+    //    if (prefab == null) return false;
+    //    stats.experience -= cheapest.totalCost;
+    //    stats.SpawnSpell(prefab);
+    //    return true;
+    //}
+
+    public bool CanReceivePurchasedItem(GameObject itemPrefab)
     {
-        if (target == null || spellSkillTree == null || spellPurchaseGraph == null || stats == null) return false;
-        HashSet<SpellsScriptableObjects> owned = new HashSet<SpellsScriptableObjects>();
-        foreach (SpellSystem spell in spellSlots)
-            if (spell != null && spell.spellData != null) owned.Add(spell.spellData);
-        if (owned.Contains(target) || !spellSkillTree.Contains(target)) return false;
-        if (!spellSkillTree.GetUnlockableSpells(owned).Contains(target)) return false;
+        if (itemPrefab == null)
+            return false;
 
-        SpellPurchaseGraph.PurchasePath cheapest = null;
-        foreach (SpellsScriptableObjects source in owned)
-            if (spellPurchaseGraph.TryGetCheapestPath(source, target, out SpellPurchaseGraph.PurchasePath candidate) &&
-                (cheapest == null || candidate.totalCost < cheapest.totalCost)) cheapest = candidate;
-        if (cheapest == null || stats.experience < cheapest.totalCost || stats.SpellIndex >= spellSlots.Count) return false;
+        PassiveItem newItem = itemPrefab.GetComponent<PassiveItem>();
 
-        GameObject prefab = FindSpellPrefab(target);
-        if (prefab == null) return false;
-        stats.experience -= cheapest.totalCost;
-        stats.SpawnSpell(prefab);
-        return true;
+        if (newItem == null || newItem.passiveItemData == null)
+            return false;
+
+        int newID = newItem.passiveItemData.UpgradeID;
+
+        // Comprobar si ya tenemos exactamente esta mejora.
+        for (int i = 0; i < passiveItemSlots.Count; i++)
+        {
+            PassiveItem currentItem = passiveItemSlots[i];
+
+            if (currentItem == null || currentItem.passiveItemData == null)
+                continue;
+
+            int currentID = currentItem.passiveItemData.UpgradeID;
+
+            if (currentID == newID)
+            {
+                Debug.Log("Ya tenés esta mejora: " +
+                    currentItem.passiveItemData.Name);
+
+                return false;
+            }
+
+            // Comprobar si la nueva mejora es el siguiente nivel.
+            GameObject nextPrefab = currentItem.passiveItemData.NextLevelPrefab;
+
+            if (nextPrefab == null)
+                continue;
+
+            PassiveItem nextItem = nextPrefab.GetComponent<PassiveItem>();
+
+            if (nextItem == null || nextItem.passiveItemData == null)
+                continue;
+
+            if (nextItem.passiveItemData.UpgradeID == newID)
+            {
+                return true;
+            }
+        }
+
+        // Es una mejora nueva: buscar espacio.
+        for (int i = 0; i < passiveItemSlots.Count; i++)
+        {
+            if (passiveItemSlots[i] == null)
+                return true;
+        }
+
+        return false;
+    }
+    public bool TryAddPurchasedItem(GameObject itemPrefab)
+    {
+        if (itemPrefab == null)
+            return false;
+        PassiveItem newItem = itemPrefab.GetComponent<PassiveItem>();
+
+        if (newItem == null || newItem.passiveItemData == null)
+            return false;
+        int newID = newItem.passiveItemData.UpgradeID; 
+
+        for (int i = 0; i < passiveItemSlots.Count; i++)
+        {
+            PassiveItem currentItem = passiveItemSlots[i];
+
+            if (currentItem == null || currentItem.passiveItemData == null)
+                continue;
+
+            int currentID = currentItem.passiveItemData.UpgradeID;
+              GameObject nextPrefab = currentItem.passiveItemData.NextLevelPrefab;
+
+            if (nextPrefab == null)
+                continue;
+
+            PassiveItem nextItem = nextPrefab.GetComponent<PassiveItem>();
+
+            if (nextItem == null || nextItem.passiveItemData == null)
+                continue;
+            int nextID = nextItem.passiveItemData.UpgradeID;
+
+            if (nextID == newID)
+            {
+                Debug.Log(
+                    "REEMPLAZANDO: " +
+                    currentItem.passiveItemData.Name +
+                    " -> " +
+                    newItem.passiveItemData.Name +
+                    " en slot " + i
+                );
+
+                GameObject upgradedObject = Instantiate(itemPrefab,transform.position,Quaternion.identity,transform);
+                PassiveItem upgradedItem = upgradedObject.GetComponent<PassiveItem>();
+
+                                              // sE reemplaza el item en el mismo slot digamos.
+                AddPassiveItem(i, upgradedItem);
+
+              
+                Destroy(currentItem.gameObject);
+
+                return true;
+            }
+        }
+
+      
+
+        for (int i = 0; i < passiveItemSlots.Count; i++)        //aca busca un slot vacio si es que no se remplaz ants
+        {
+            if (passiveItemSlots[i] == null)
+            {
+                GameObject newObject = Instantiate(itemPrefab,transform.position, Quaternion.identity,transform);
+
+              AddPassiveItem(i, newObject.GetComponent<PassiveItem>());
+
+                return true;
+            }
+        }
+
+
+        return false;
     }
 
     private GameObject FindSpellPrefab(SpellsScriptableObjects data)
@@ -129,6 +255,8 @@ public class InventoryManager : MonoBehaviour
         {
             GameManager.instance.EndLevelUp();
         }
+
+
     }
 
     public void levelUpSpell(int slot, int upgradeIndex)
@@ -313,8 +441,6 @@ public class InventoryManager : MonoBehaviour
             }
         }
     }
-
-
     void RemoveUpgradeOptions()
     {
         foreach(var upgradeOption in upgradeOptions)

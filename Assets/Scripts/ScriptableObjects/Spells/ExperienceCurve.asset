@@ -12,4 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 827f25154a208dd419f8dd82f2aa862b, type: 3}
   m_Name: ExperienceCurve
   m_EditorClassIdentifier: Assembly-CSharp::ExperienceCurveAVL
-  entries: []
+  entries:
+  - level: 1
+    experienceRequired: 10
+  - level: 2
+    experienceRequired: 20

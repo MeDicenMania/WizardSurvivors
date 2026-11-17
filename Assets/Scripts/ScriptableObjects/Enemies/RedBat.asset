@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: RedBat
   m_EditorClassIdentifier: Assembly-CSharp::EnemyScriptableOjbects
   moveSpeed: 2
-  maxHealth: 2
+  maxHealth: 1
   damage: 100

@@ -28,6 +28,19 @@ public class PassiveItemScriptableObject : ScriptableObject
     string description;        //no lo cambies en game/runtime           // !Que es el hechizo tipo como funciona pero si es una mejora pone que mejora
     public string Description { get => description; private set => description = value; }
 
+    [SerializeField]
+    int tokenPrice;
+
+    public int TokenPrice => tokenPrice;
+
+    [SerializeField]
+    bool isShopItem = false;
+
+    public bool IsShopItem => isShopItem;
+
+    [SerializeField]
+     int upgradeID;
+    public int UpgradeID { get => upgradeID; private set => upgradeID = value; }
 
 
 }

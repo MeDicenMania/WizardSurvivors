@@ -9,7 +9,8 @@ public class GameManager : MonoBehaviour
         Gameplay,
         Paused,
         GameOver,
-        LevelUp
+        LevelUp,
+        InShop
     }
 
     public GameState currentState;  //estado actual de la partida
@@ -21,6 +22,7 @@ public class GameManager : MonoBehaviour
     public GameObject pauseScreen;
     public GameObject resultScreen;
     public GameObject levelUpScreen;
+    public GameObject shopScreen;
 
     //Variables de resultados y so
     public TextMeshProUGUI currentDamageUI;
@@ -45,6 +47,12 @@ public class GameManager : MonoBehaviour
 
     public bool isGameOver = false;
     public static GameManager instance;
+
+    [Header("Shop")]
+    public bool isShoping = false;
+    public TextMeshProUGUI cheapestOption;
+    public ShopManager shopManager;
+
     private void Awake()
     {
 
@@ -62,7 +70,15 @@ public class GameManager : MonoBehaviour
     }
     void Update()
     {
-       
+        // La tecla P se lee siempre, igual que Escape en la pausa
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            if (currentState == GameState.InShop)
+                EndShoping();
+            else if (currentState == GameState.Gameplay)
+                StartShoping();
+        }
+
         switch (currentState)
         {
             case GameState.Gameplay:
@@ -71,30 +87,29 @@ public class GameManager : MonoBehaviour
                 break;
 
             case GameState.Paused:
-
                 CheckForPause();
                 break;
 
             case GameState.GameOver:
-                if(!isGameOver)
+                if (!isGameOver)
                 {
                     isGameOver = true;
                     Time.timeScale = 0;
-                    Debug.Log("Game is over");
                     DisplayResults();
                 }
                 break;
+
             case GameState.LevelUp:
                 if (!ischoosingUpgrades)
                 {
                     ischoosingUpgrades = true;
                     Time.timeScale = 0;
                     levelUpScreen.SetActive(true);
-                    Debug.Log("upgrades");
                 }
                 break;
-            default:
-                Debug.LogError("invalidstate");
+
+            case GameState.InShop:
+                CheckForPause();
                 break;
         }
     }
@@ -126,13 +141,32 @@ public class GameManager : MonoBehaviour
         if( currentState == GameState.Paused)
         {
             ChangeState(previusState);
-            Time.timeScale = 1;          //despausa
+                     //despausa
             pauseScreen.SetActive(false);
             Debug.Log("saliste de pausa");
+            bool menuOpen = previusState == GameState.InShop
+                    || previusState == GameState.LevelUp;
+            Time.timeScale = menuOpen ? 0 : 1;
         }
 
 
     }
+
+    public void CheckShop()
+    {
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            if (currentState == GameState.InShop)
+            {
+                EndShoping();
+            }
+            else
+            {
+                StartShoping();
+            }
+        }
+    }
+    
 
 
     void CheckForPause()
@@ -173,6 +207,7 @@ public class GameManager : MonoBehaviour
         pauseScreen.SetActive(false);
         resultScreen.SetActive(false);
         levelUpScreen.SetActive(false);
+        shopScreen.SetActive(false);
     }
 
 
@@ -210,5 +245,21 @@ public class GameManager : MonoBehaviour
         levelUpScreen.SetActive(false);
         ChangeState(GameState.Gameplay);
     }
+    public void StartShoping()
+    {
+        ChangeState(GameState.InShop);
+        isShoping = true;
+        Time.timeScale = 0;
+        shopScreen.SetActive(true);
+    }
+
+    public void EndShoping()
+    {
+        isShoping = false;
+        Time.timeScale = 1;
+        shopScreen.SetActive(false);
+        ChangeState(GameState.Gameplay);
+    }
+
 
 }

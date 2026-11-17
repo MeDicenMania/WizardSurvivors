@@ -25,21 +25,21 @@ public class ExperienceDrop : MonoBehaviour
         if (droppedInCurrentLife) return;
         droppedInCurrentLife = true;
 
-        float randomNum = UnityEngine.Random.Range(0f, 100f);
-        List<Drops> possibleDrops = new List<Drops>();
-        foreach (Drops rate in drops)
+        float total = 0f;
+        foreach (Drops d in drops) total += d.dropRate;
+        if (total <= 0f) return;
+
+        float roll = Random.Range(0f, total);
+        float acumulado = 0f;
+
+        foreach (Drops d in drops)
         {
-            if (randomNum <= rate.dropRate)
+            acumulado += d.dropRate;
+            if (roll <= acumulado)
             {
-                possibleDrops.Add(rate);
-            }
-        }
-        if (possibleDrops.Count > 0)
-        {
-            Drops selectedDrop = possibleDrops[UnityEngine.Random.Range(0, possibleDrops.Count)];
-            if (selectedDrop.prefab != null)
-            {
-                Instantiate(selectedDrop.prefab, transform.position, Quaternion.identity);
+                if (d.prefab != null)
+                    Instantiate(d.prefab, transform.position, Quaternion.identity);
+                return;
             }
         }
     }
