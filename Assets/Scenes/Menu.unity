@@ -1028,8 +1028,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ScreenFlowController
   screenOrder:
   - Menu
-  - 
-  - 
 --- !u!4 &1839250024
 Transform:
   m_ObjectHideFlags: 0
